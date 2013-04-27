@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/setting_romantic_tv"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:background="@color/setting_top_bg"
+                    android:gravity="center"
+                    android:text="@string/setting_romantic"
+                    android:textColor="@color/setting_text_color" />
+
+                <ListView
+                    android:id="@+id/setting_romantic_list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:background="@color/setting_list_bg" 
+                    >
+                </ListView>
+            </LinearLayout>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="fill_parent"
+                android:background="@android:color/black" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/setting_area_tv"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:background="@color/setting_top_bg"
+                    android:gravity="center"
+                    android:text="@string/setting_area"
+                    android:textColor="@color/setting_text_color" />
+
+                <ListView
+                    android:id="@+id/setting_area_list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:background="@color/setting_list_bg" >
+                </ListView>
+            </LinearLayout>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="fill_parent"
+                android:background="@android:color/black" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:background="@color/setting_top_bg"
+                    android:gravity="center" >
+
+                    <TextView
+                        android:id="@+id/setting_room_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/setting_room"
+                        android:textColor="@color/setting_text_color" />
+
+                    <ImageView
+                        android:id="@+id/room_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/add" />
+                </LinearLayout>
+
+                <ListView
+                    android:id="@+id/setting_room_list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:background="@color/setting_list_bg" >
+                </ListView>
+
+                <Button
+                    android:id="@+id/room_delete_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="9dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/delete_btn_bg"
+                    android:text="@string/setting_delete" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="fill_parent"
+                android:background="@android:color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:id="@+id/setting_channel_tv"
+                            android:layout_width="fill_parent"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:background="@color/setting_top_bg"
+                            android:gravity="center"
+                            android:text="@string/setting_channel"
+                            android:textColor="@color/setting_text_color" />
+
+                        <TextView
+                            android:id="@+id/setting_device_tv"
+                            android:layout_width="fill_parent"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:background="@color/setting_top_bg"
+                            android:gravity="center"
+                            android:text="@string/setting_device"
+                            android:textColor="@color/setting_text_color" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:background="@color/setting_top_bg"
+                            android:gravity="center" >
+
+                            <TextView
+                                android:id="@+id/setting_type_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@color/setting_top_bg"
+                                android:gravity="center"
+                                android:text="@string/setting_type"
+                                android:textColor="@color/setting_text_color" />
+
+                            <ImageView
+                                android:id="@+id/device_add"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:src="@drawable/add" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <ListView
+                        android:id="@+id/setting_device_list"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:background="@color/setting_list_bg" >
+                    </ListView>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp" >
+
+                <Button
+                    android:id="@+id/back_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/save_btn_bg"
+                    android:text="@string/tv_back" />
+
+                <Button
+                    android:id="@+id/device_delete_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="60dp"
+                    android:background="@drawable/delete_btn_bg"
+                    android:text="@string/setting_delete" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

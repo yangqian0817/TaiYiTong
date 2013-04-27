@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp" >
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="@dimen/center_button_size"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/ac_time" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="@dimen/center_button_size"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/ac_hour" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="@dimen/center_button_size"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/ac_minute" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="@dimen/center_button_size"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ac_wind_speed" />
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="@dimen/center_button_size"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ac_wind_direction" />
+
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="@dimen/center_button_size"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ac_clear" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="@dimen/center_button_size"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ac_add"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="@dimen/center_button_size"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:text="@string/ac_sub"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="@dimen/center_button_size"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/music_mode" />
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="@dimen/center_button_size"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ac_light" />
+
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="@dimen/center_button_size"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ac_sleep" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/video_btn"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="wrap_content"
+            android:text="@string/lock" />
+
+        <ToggleButton
+            android:id="@+id/toggleButton1"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/tv_open" />
+    </RelativeLayout>
+
+</LinearLayout>

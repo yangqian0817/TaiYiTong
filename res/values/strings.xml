@@ -1,0 +1,66 @@
+<resources>
+
+    <string name="app_name">TaiYiTong</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="setting_romantic">情调设置</string>
+    <string name="setting_area">请选择区域</string>
+    <string name="setting_room">房间</string>
+    <string name="setting_room_id">房间号码</string>
+    <string name="setting_channel">通道号码</string>
+    <string name="setting_device">设备名称</string>
+    <string name="setting_type">类型</string>
+    <string name="setting_save">保存</string>
+    <string name="setting_cancel">取消</string>
+    <string name="setting_delete">删除</string>
+    <string name="device_name">设备名称</string>
+    <string name="device_type">设备类型</string>
+    <string name="main_choose_area">选择区域</string>
+    <string name="setting_ip">配置IP</string>
+    <string name="setting_port">端口</string>
+    <string name="setting_connect">连接</string>
+    <string name="setting_reset">重置</string>
+    <string name="tv_back">返回</string>
+    
+    <string name="v_add">Vol+</string>
+    <string name="v_sub">Vol-</string>
+    <string name="tv_choose">选台</string>
+    <string name="tv_silent">静音</string>
+    <string name="tv_ok">  OK  </string>
+    <string name="tv_next">Next</string>
+    <string name="tv_last">Last</string>
+    <string name="tv_video">视频</string>
+    <string name="tv_open">打开</string>
+    <string name="tv_close">关闭</string>
+    
+    <string name="music_exit">退出</string>
+    <string name="music_menu">菜单</string>
+    <string name="m_previous">  &lt;&lt;  </string>
+    <string name="m_next">  &gt;&gt;  </string>
+    <string name="music_mode">模式</string>
+	<string name="submit">确定</string>
+	
+	<string name="ac_time">定时</string>
+	<string name="ac_hour">小时</string>
+	<string name="ac_minute">分钟</string>
+	<string name="ac_wind_speed">风速</string>
+	<string name="ac_wind_direction">风向</string>
+	<string name="ac_clear">净化</string>
+	<string name="lock">锁键</string>
+	
+	<string name="ac_add">  +  </string>
+	<string name="ac_sub">  -  </string>
+	<string name="ac_light">灯</string>
+	<string name="ac_sleep">睡眠</string>
+    
+	<string name="t_add">上调温度</string>
+	<string name="t_sub">下调温度</string>
+	
+	<string name="curtain_up">上升</string>
+	<string name="curtain_down">下降</string>
+	<string name="curtain_stop">暂停</string>
+	<string name="curtain_light">亮灯</string>
+	<string name="room_name">房间名</string>
+	
+</resources>

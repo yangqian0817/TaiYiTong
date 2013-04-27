@@ -1,0 +1,17 @@
+<resources>
+
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_medium">8dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+    
+    <dimen name="list_text_size">20sp</dimen>
+    <dimen name="text_size">20sp</dimen>
+	<color name="setting_top_bg">#0b203b</color>
+	<color name="setting_choose_bg">#c3dcff</color>
+	<color name="setting_list_bg">#315789</color>
+	<color name="setting_right_bg">#b0d4f8</color>
+	<color name="setting_text_color">#7caff7</color>
+	<dimen name="button_size">150dp</dimen>
+	<dimen name="center_button_size">80dp</dimen>
+	
+</resources>
