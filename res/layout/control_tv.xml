@@ -10,21 +10,21 @@
         android:gravity="center" >
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/back_btn"
             android:layout_width="@dimen/button_size"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/tv_back" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/choose_btn"
             android:layout_width="@dimen/button_size"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/tv_choose" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/slience_btn"
             android:layout_width="@dimen/button_size"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -41,6 +41,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+             android:gravity="center_vertical"
             android:layout_weight="1" >
 
             <Button
@@ -55,10 +56,11 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+             android:gravity="center_vertical"
             android:layout_weight="1" >
 
             <Button
-                android:id="@+id/button5"
+                android:id="@+id/submit_btn"
                 android:layout_width="@dimen/center_button_size"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -66,27 +68,29 @@
                 android:text="@string/tv_ok" />
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/v_sub_btn"
                 android:layout_width="@dimen/center_button_size"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="58dp"
-                android:layout_toLeftOf="@+id/button5"
+                android:layout_toLeftOf="@+id/submit_btn"
                 android:text="@string/v_sub" />
 
             <Button
-                android:id="@+id/button6"
+                android:id="@+id/v_add_btn"
                 android:layout_width="@dimen/center_button_size"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginLeft="58dp"
-                android:layout_toRightOf="@+id/button5"
+                android:layout_marginLeft="68dp"
+                android:layout_toRightOf="@+id/submit_btn"
                 android:text="@string/v_add" />
+
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:layout_weight="1" >
 
             <Button
@@ -111,7 +115,7 @@
             android:text="@string/tv_video" />
 
         <ToggleButton
-            android:id="@+id/toggleButton1"
+            android:id="@+id/toggle_btn"
             android:layout_width="@dimen/button_size"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

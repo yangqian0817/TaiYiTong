@@ -10,6 +10,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.ToggleButton;
 
 import com.mac.taiyitong.cons.Light_Cmd;
+import com.mac.taiyitong.util.ByteStrParser;
 import com.mac.taiyitong.util.WriteUtil;
 
 public class LightActivity extends Activity {
@@ -46,11 +47,11 @@ public class LightActivity extends Activity {
 					boolean isChecked) {
 				// TODO Auto-generated method stub
 				if (isChecked) {
-					WriteUtil.write(areaId_one, areaId_two, roomId, channelId,
-							Light_Cmd.light_open.getVal());
+					WriteUtil.write(LightActivity.this, areaId_one, areaId_two,
+							roomId, channelId, Light_Cmd.light_open.getVal());
 				} else {
-					WriteUtil.write(areaId_one, areaId_two, roomId, channelId,
-							Light_Cmd.light_close.getVal());
+					WriteUtil.write(LightActivity.this, areaId_one, areaId_two,
+							roomId, channelId, Light_Cmd.light_close.getVal());
 				}
 			}
 		});
@@ -60,14 +61,17 @@ public class LightActivity extends Activity {
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				// TODO Auto-generated method stub
+				int sb_Val = seekBar.getProgress() + 63;
+				String h_sb_Val_Str = Integer.toHexString(sb_Val);
+				byte[] cmd = ByteStrParser.hexStringToBytes(h_sb_Val_Str);
+				WriteUtil.write(LightActivity.this, areaId_one, areaId_two,
+						roomId, channelId, cmd[0]);
 			}
 
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
 				// TODO Auto-generated method stub
-				byte cmd = Byte.parseByte(Integer.toHexString(seekBar
-						.getProgress() + 63));
-				WriteUtil.write(areaId_one, areaId_two, roomId, channelId, cmd);
+
 			}
 
 			@Override

@@ -4,13 +4,21 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
+import android.content.Context;
+import android.widget.Toast;
+
 public class WriteUtil {
 	public static byte[] tyt_b = new byte[] { 0x54, 0x59, 0x54 };
-	public static OutputStream outputStream;
+	public static OutputStream outputStream = null;
 	static ByteBuffer buffer = ByteBuffer.allocate(8);
 
-	public static void write(int areaId_one, int areaId_two, int roomId,
-			int channelId, byte cmd) {
+	public static void write(Context context, int areaId_one, int areaId_two,
+			int roomId, int channelId, byte cmd) {
+		if (outputStream == null) {
+			Toast.makeText(context, "请先连接设置IP和端口，再进行操作", Toast.LENGTH_SHORT)
+					.show();
+			return;
+		}
 		buffer.clear();
 		buffer.put(tyt_b);
 		byte areaId_one_b = Byte.parseByte(Integer.toHexString(areaId_one - 1));

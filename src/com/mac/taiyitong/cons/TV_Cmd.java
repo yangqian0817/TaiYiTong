@@ -2,7 +2,7 @@ package com.mac.taiyitong.cons;
 
 public enum TV_Cmd {
 	witch((byte) 0x0040), video((byte) 0x0041), previous((byte) 0x0042), next(
-			(byte) 0x0043), quite((byte) 0x0044), back((byte) 0x0045), v_add(
+			(byte) 0x0043), slience((byte) 0x0044), back((byte) 0x0045), v_add(
 			(byte) 0x0046), v_sub((byte) 0x0047), choose((byte) 0x0048), submit(
 			(byte) 0x0049), v_1((byte) 0x004a), v_2((byte) 0x004b), v_3(
 			(byte) 0x004c), v_4((byte) 0x004d), v_5((byte) 0x004e), v_6(

@@ -1,5 +1,8 @@
 package com.mac.taiyitong;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +11,8 @@ import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -25,6 +30,7 @@ import com.mac.taiyitong.adapter.RoomListAdapter;
 import com.mac.taiyitong.entity.Device;
 import com.mac.taiyitong.entity.Room;
 import com.mac.taiyitong.util.SQLiteHelper;
+import com.mac.taiyitong.util.WriteUtil;
 
 public class SettingActivity extends Activity {
 	ImageView room_add_Iv;
@@ -58,6 +64,9 @@ public class SettingActivity extends Activity {
 			"地采暖", "背景音乐", "电视机" };
 	SharedPreferences sharedPreferences;
 	SharedPreferences.Editor editor;
+	Handler handler;
+	String n_ip = null;
+	int n_port = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +89,21 @@ public class SettingActivity extends Activity {
 		sqLiteHelper = new SQLiteHelper(this, "tyt.db", null, 1);
 
 		getAreaData();
+
+		handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				// TODO Auto-generated method stub
+				super.handleMessage(msg);
+				if (msg.what == 0) {
+					Toast.makeText(SettingActivity.this, "IP地址和端口错误",
+							Toast.LENGTH_SHORT).show();
+				} else if (msg.what == 1) {
+					Toast.makeText(SettingActivity.this, "网络异常",
+							Toast.LENGTH_SHORT).show();
+				}
+			}
+		};
 
 		setting_romantic_list_adapter = new android.widget.ArrayAdapter<String>(
 				this, R.layout.simple_listview_item, romantic_data);
@@ -135,11 +159,13 @@ public class SettingActivity extends Activity {
 										return;
 									}
 									editor.clear();
+									n_ip = n_ip_Str;
 									editor.putString("ip", n_ip_Str);
-									editor.putInt("port",
-											Integer.parseInt(n_port_Str));
+									n_port = Integer.parseInt(n_port_Str);
+									editor.putInt("port", n_port);
 									editor.commit();
 									dialog.dismiss();
+									connection(n_ip, n_port);
 								}
 							});
 					reset_Btn
@@ -476,9 +502,38 @@ public class SettingActivity extends Activity {
 		device_data = new ArrayList<Device>();
 		channelid_List = new ArrayList<String>();
 		room_num_List = new ArrayList<String>();
-		for (int i = 1; i <= 255; i++) {
+		for (int i = 1; i <= 256; i++) {
 			area_data.add("区域" + i);
 		}
+	}
+
+	public void connection(final String ip, final int port) {
+		if (MainActivity.socket.isConnected()) {
+			try {
+				MainActivity.socket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				try {
+					MainActivity.socket = new Socket(ip, port);
+					WriteUtil.outputStream = MainActivity.socket
+							.getOutputStream();
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					handler.sendEmptyMessage(0);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					handler.sendEmptyMessage(1);
+				}
+			}
+		}).start();
 	}
 
 	@Override

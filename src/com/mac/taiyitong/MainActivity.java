@@ -13,6 +13,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,7 +39,7 @@ public class MainActivity extends ActivityGroup {
 
 	ImageView setting_Iv;
 	Button choose_area_Btn;
-	String[] area = new String[255];
+	String[] area = new String[256];
 	public int areaId = -1;
 	public int roomId = -1;
 	public int deviceId = -1;
@@ -56,7 +58,8 @@ public class MainActivity extends ActivityGroup {
 	SharedPreferences preferences;
 	String ip = "";
 	int port = 0;
-	Socket socket;
+	public static Socket socket;
+	Handler handler;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,20 @@ public class MainActivity extends ActivityGroup {
 				device_data);
 		room_list.setAdapter(room_list_adapter);
 		device_list.setAdapter(device_list_adapter);
+		handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				// TODO Auto-generated method stub
+				super.handleMessage(msg);
+				if (msg.what == 0) {
+					Toast.makeText(MainActivity.this, "IP地址和端口错误",
+							Toast.LENGTH_SHORT).show();
+				} else if (msg.what == 1) {
+					Toast.makeText(MainActivity.this, "网络异常",
+							Toast.LENGTH_SHORT).show();
+				}
+			}
+		};
 		choose_area_Btn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -235,7 +252,7 @@ public class MainActivity extends ActivityGroup {
 	}
 
 	public void getAreaData() {
-		for (int i = 1; i <= 255; i++) {
+		for (int i = 1; i <= 256; i++) {
 			area[i - 1] = "区域" + i;
 		}
 	}
@@ -293,12 +310,12 @@ public class MainActivity extends ActivityGroup {
 					WriteUtil.outputStream = socket.getOutputStream();
 				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
-					Toast.makeText(MainActivity.this, "IP地址和端口错误",
-							Toast.LENGTH_SHORT).show();
+
+					handler.sendEmptyMessage(0);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					Toast.makeText(MainActivity.this, "网络异常",
-							Toast.LENGTH_SHORT).show();
+
+					handler.sendEmptyMessage(1);
 				}
 			}
 		});
