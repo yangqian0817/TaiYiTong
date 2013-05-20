@@ -9,24 +9,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.mac.taiyitong.R;
-import com.mac.taiyitong.entity.Device;
+import com.mac.taiyitong.entity.Scene_Device;
 
-public class DeviceListAdapter extends BaseAdapter {
+public class SceneDeviceListAdapter extends BaseAdapter {
 
 	private Context context;
-	private List<Device> list;
+	private List<Scene_Device> list;
 
-	public DeviceListAdapter(Context context, List<Device> list) {
+	public SceneDeviceListAdapter(Context context, List<Scene_Device> list) {
 		super();
 		this.context = context;
 		this.list = list;
-	}
-
-	public DeviceListAdapter() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -53,55 +49,21 @@ public class DeviceListAdapter extends BaseAdapter {
 		if (convertView == null) {
 			LayoutInflater localinflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = localinflater
-					.inflate(R.layout.device_list_item, null);
+			convertView = localinflater.inflate(
+					R.layout.scene_device_list_item, null);
 		}
-		TextView channelid_tv = (TextView) convertView
-				.findViewById(R.id.channelid_tv);
 		TextView device_name_tv = (TextView) convertView
 				.findViewById(R.id.device_name_tv);
-		TextView device_type_tv = (TextView) convertView
-				.findViewById(R.id.device_type_tv);
-		Device device = list.get(position);
-		channelid_tv.setText(device.getChannelid() + "");
-		device_name_tv.setText(device.getName());
-		switch (device.getType()) {
-		case 1:
-			device_type_tv.setText("可调光灯");
-			break;
-		case 2:
-			device_type_tv.setText("不可调光灯");
-			break;
+		ToggleButton toggleButton = (ToggleButton) convertView
+				.findViewById(R.id.toggle_btn);
+		Scene_Device device = list.get(position);
 
-		case 3:
-			device_type_tv.setText("通用电器");
-			break;
-
-		case 4:
-			device_type_tv.setText("窗帘类");
-			break;
-
-		case 5:
-			device_type_tv.setText("空调");
-			break;
-
-		case 6:
-			device_type_tv.setText("地采暖");
-			break;
-		case 7:
-			device_type_tv.setText("背景音乐");
-			break;
-		case 8:
-			device_type_tv.setText("电视机");
-			break;
-		case 9:
-			device_type_tv.setText("晾衣架");
-			break;
-		default:
-			break;
+		device_name_tv.setText(device.getDevice().getName());
+		if (device.getState() == 1) {
+			toggleButton.setChecked(true);
 		}
 		if (position == selectItem) {
-			convertView.setBackgroundColor(R.color.setting_choose_bg);
+			convertView.setBackgroundResource(R.drawable.list_check_bg);
 		} else {
 			convertView.setBackgroundColor(Color.TRANSPARENT);
 		}
@@ -113,4 +75,5 @@ public class DeviceListAdapter extends BaseAdapter {
 	}
 
 	private int selectItem = -1;
+
 }

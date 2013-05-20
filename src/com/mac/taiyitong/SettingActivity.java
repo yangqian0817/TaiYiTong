@@ -9,6 +9,7 @@ import java.util.List;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -59,9 +60,9 @@ public class SettingActivity extends Activity {
 	ArrayAdapter setting_area_list_adapter;
 	RoomListAdapter setting_room_list_adapter;
 	DeviceListAdapter setting_device_list_adapter;
-	String[] romantic_data = new String[] { "房间/设备设置", "远程控制设置" };
+	String[] setting_data = new String[] { "房间/设备设置", "远程控制设置", "场景设置" };
 	String[] device_type = new String[] { "可调光灯", "不可调光灯", "通用电器", "窗帘类", "空调",
-			"地采暖", "背景音乐", "电视机" };
+			"地采暖", "背景音乐", "电视机", "晾衣架" };
 	SharedPreferences sharedPreferences;
 	SharedPreferences.Editor editor;
 	Handler handler;
@@ -101,12 +102,15 @@ public class SettingActivity extends Activity {
 				} else if (msg.what == 1) {
 					Toast.makeText(SettingActivity.this, "网络异常",
 							Toast.LENGTH_SHORT).show();
+				} else if (msg.what == 2) {
+					Toast.makeText(SettingActivity.this, "连接成功",
+							Toast.LENGTH_SHORT).show();
 				}
 			}
 		};
 
 		setting_romantic_list_adapter = new android.widget.ArrayAdapter<String>(
-				this, R.layout.simple_listview_item, romantic_data);
+				this, R.layout.simple_listview_item, setting_data);
 		setting_romantic_list.setAdapter(setting_romantic_list_adapter);
 
 		setting_romantic_list.setOnItemClickListener(new OnItemClickListener() {
@@ -177,6 +181,11 @@ public class SettingActivity extends Activity {
 									dialog.dismiss();
 								}
 							});
+				} else if (arg2 == 2) {
+					Intent intent = new Intent();
+					intent.setClass(SettingActivity.this,
+							SceneSettingActivity.class);
+					startActivity(intent);
 				}
 			}
 		});
@@ -502,18 +511,20 @@ public class SettingActivity extends Activity {
 		device_data = new ArrayList<Device>();
 		channelid_List = new ArrayList<String>();
 		room_num_List = new ArrayList<String>();
-		for (int i = 1; i <= 256; i++) {
+		for (int i = 0; i <= 255; i++) {
 			area_data.add("区域" + i);
 		}
 	}
 
 	public void connection(final String ip, final int port) {
-		if (MainActivity.socket.isConnected()) {
-			try {
-				MainActivity.socket.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if (MainActivity.socket != null) {
+			if (MainActivity.socket.isConnected()) {
+				try {
+					MainActivity.socket.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		new Thread(new Runnable() {
@@ -522,9 +533,11 @@ public class SettingActivity extends Activity {
 			public void run() {
 				// TODO Auto-generated method stub
 				try {
+
 					MainActivity.socket = new Socket(ip, port);
 					WriteUtil.outputStream = MainActivity.socket
 							.getOutputStream();
+					handler.sendEmptyMessage(2);
 				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
 					handler.sendEmptyMessage(0);

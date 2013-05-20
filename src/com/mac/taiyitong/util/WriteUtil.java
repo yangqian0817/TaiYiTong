@@ -21,10 +21,18 @@ public class WriteUtil {
 		}
 		buffer.clear();
 		buffer.put(tyt_b);
-		byte areaId_one_b = Byte.parseByte(Integer.toHexString(areaId_one - 1));
-		byte areaId_two_b = Byte.parseByte(Integer.toHexString(areaId_two - 1));
-		byte roomId_b = Byte.parseByte(Integer.toHexString(roomId - 1));
-		byte channelId_b = Byte.parseByte(Integer.toHexString(channelId - 1));
+		byte areaId_one_b = (byte) areaId_one;
+		byte areaId_two_b = (byte) areaId_two;
+		byte roomId_b = (byte) roomId;
+		byte channelId_b = (byte) channelId;
+
+		// byte areaId_one_b = Byte.parseByte(Integer.toHexString(areaId_one -
+		// 1));
+		// byte areaId_two_b = Byte.parseByte(Integer.toHexString(areaId_two -
+		// 1));
+		// byte roomId_b = Byte.parseByte(Integer.toHexString(roomId - 1));
+		// byte channelId_b = Byte.parseByte(Integer.toHexString(channelId -
+		// 1));
 
 		buffer.put(areaId_one_b);
 		buffer.put(areaId_two_b);

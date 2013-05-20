@@ -6,13 +6,14 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dp" >
+        android:layout_height="40dp" >
 
         <Button
             android:id="@+id/time_btn"
             android:layout_width="@dimen/center_button_size"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/btn_bg"
             android:text="@string/ac_time" />
 
         <Button
@@ -20,6 +21,7 @@
             android:layout_width="@dimen/center_button_size"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/btn_bg"
             android:text="@string/ac_hour" />
 
         <Button
@@ -27,6 +29,7 @@
             android:layout_width="@dimen/center_button_size"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/btn_bg"
             android:text="@string/ac_minute" />
     </LinearLayout>
 
@@ -37,36 +40,43 @@
         android:gravity="center" >
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp" >
 
             <Button
                 android:id="@+id/wind_speed_btn"
-                android:layout_width="@dimen/center_button_size"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/btn_bg"
                 android:text="@string/ac_wind_speed" />
 
             <Button
                 android:id="@+id/wind_direction_btn"
-                android:layout_width="@dimen/center_button_size"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
+                android:background="@drawable/btn_bg"
                 android:text="@string/ac_wind_direction" />
 
             <Button
                 android:id="@+id/clear_btn"
-                android:layout_width="@dimen/center_button_size"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
+                android:background="@drawable/btn_bg"
                 android:text="@string/ac_clear" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
@@ -75,69 +85,87 @@
             <Button
                 android:id="@+id/t_add_btn"
                 android:layout_width="@dimen/center_button_size"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_weight="1"
+                android:background="@drawable/btn_bg"
                 android:text="@string/ac_add"
                 android:textSize="20sp" />
 
             <Button
                 android:id="@+id/t_sub_btn"
                 android:layout_width="@dimen/center_button_size"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
+                android:background="@drawable/btn_bg"
                 android:text="@string/ac_sub"
                 android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp" >
 
             <Button
                 android:id="@+id/mode_btn"
-                android:layout_width="@dimen/center_button_size"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/btn_bg"
                 android:text="@string/music_mode" />
 
             <Button
                 android:id="@+id/light_btn"
-                android:layout_width="@dimen/center_button_size"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
+                android:background="@drawable/btn_bg"
                 android:text="@string/ac_light" />
 
             <Button
                 android:id="@+id/sleep_btn"
-                android:layout_width="@dimen/center_button_size"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
+                android:background="@drawable/btn_bg"
                 android:text="@string/ac_sleep" />
         </LinearLayout>
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:gravity="center" >
 
         <Button
             android:id="@+id/lock_btn"
-            android:layout_width="@dimen/button_size"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/btn_bg"
             android:text="@string/lock" />
 
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
         <ToggleButton
-            android:id="@+id/toggle_Btn"
-            android:layout_width="@dimen/button_size"
+            android:id="@+id/toggle_btn"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:layout_weight="1"
+            android:background="@drawable/btn_bg"
             android:text="@string/tv_open" />
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

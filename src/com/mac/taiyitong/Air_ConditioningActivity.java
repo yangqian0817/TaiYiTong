@@ -48,8 +48,9 @@ public class Air_ConditioningActivity extends Activity {
 		minute_Btn = (Button) findViewById(R.id.minute_btn);
 		clear_Btn = (Button) findViewById(R.id.clear_btn);
 		wind_direction_Btn = (Button) findViewById(R.id.wind_direction_btn);
-		lock_Btn = (Button) findViewById(R.id.video_btn);
+		lock_Btn = (Button) findViewById(R.id.lock_btn);
 		light_Btn = (Button) findViewById(R.id.light_btn);
+		toggle_Btn = (ToggleButton) findViewById(R.id.toggle_btn);
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
 			roomId = bundle.getInt("roomId");
@@ -114,6 +115,17 @@ public class Air_ConditioningActivity extends Activity {
 						areaId_two, roomId, channelId, AC_Cmd.time.getVal());
 			}
 		});
+
+		light_Btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				WriteUtil.write(Air_ConditioningActivity.this, areaId_one,
+						areaId_two, roomId, channelId, AC_Cmd.light.getVal());
+			}
+		});
+
 		hour_Btn.setOnClickListener(new OnClickListener() {
 
 			@Override

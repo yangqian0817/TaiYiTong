@@ -13,6 +13,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.mac.taiyitong.entity.Device;
 import com.mac.taiyitong.entity.Room;
+import com.mac.taiyitong.entity.Scene;
+import com.mac.taiyitong.entity.Scene_Device;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
 	SQLiteDatabase db;
@@ -28,7 +30,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		db.execSQL("CREATE TABLE IF NOT EXISTS room(id integer PRIMARY KEY autoincrement,name VARCHAR(32),roomnum integer,areaid integer)");
 		db.execSQL("CREATE TABLE IF NOT EXISTS device(id integer PRIMARY KEY autoincrement,name VARCHAR(32),channelid integer,type integer,roomid integer)");
 		db.execSQL("CREATE TABLE IF NOT EXISTS channel(id integer PRIMARY KEY)");
-		for (int i = 1; i <= 256; i++) {
+		db.execSQL("CREATE TABLE IF NOT EXISTS scene(id integer PRIMARY KEY autoincrement,name VARCHAR(32),areaid integer)");
+		// db.execSQL("CREATE TABLE IF NOT EXISTS scene_room(id integer PRIMARY KEY autoincrement,roomid integer,sceneid integer)");
+		db.execSQL("CREATE TABLE IF NOT EXISTS scene_device(id integer PRIMARY KEY autoincrement,deviceid integer,state integer,sceneid integer)");
+		for (int i = 0; i <= 255; i++) {
 			db.execSQL("insert into channel(id) values(" + i + ")");
 		}
 	}
@@ -180,6 +185,137 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		List<String> list = new ArrayList<String>();
 		while (cursor.moveToNext()) {
 			list.add(cursor.getInt(0) + "");
+		}
+		cursor.close();
+		db.close();
+		return list;
+	}
+
+	public long addScene(ContentValues contentValues) {
+		db = getWritableDatabase();
+		long result = -1;
+		try {
+			db.beginTransaction();
+			result = db.insert("scene", null, contentValues);
+			db.setTransactionSuccessful();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			db.endTransaction();
+			db.close();
+		}
+		return result;
+	}
+
+	public boolean delScene(int id) {
+		boolean b = false;
+		db = getWritableDatabase();
+		try {
+			db.beginTransaction();
+			db.execSQL("delete from scene_device where sceneid=" + id);
+			db.execSQL("delete from scene_room where sceneid=" + id);
+			db.execSQL("delete from scene where id=" + id);
+			db.setTransactionSuccessful();
+			b = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			db.endTransaction();
+			db.close();
+		}
+		return b;
+	}
+
+	public void modifyScene(ContentValues contentValues) {
+		db = getWritableDatabase();
+		try {
+			db.beginTransaction();
+			db.update("scene", contentValues, "id",
+					new String[] { contentValues.getAsInteger("id") + "" });
+			db.setTransactionSuccessful();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			db.endTransaction();
+			db.close();
+		}
+	}
+
+	public List<Scene> selectSceneByAreaID(int id) {
+		db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery("SELECT * FROM scene WHERE areaid=" + id,
+				null);
+		List<Scene> list = new ArrayList<Scene>();
+		while (cursor.moveToNext()) {
+			Scene scene = new Scene();
+			scene.setId(cursor.getInt(0));
+			scene.setName(cursor.getString(1));
+			scene.setAreaid(cursor.getInt(2));
+			list.add(scene);
+		}
+		cursor.close();
+		db.close();
+		return list;
+	}
+
+	public long addScene_Device(ContentValues contentValues) {
+		db = getWritableDatabase();
+		long result = -1;
+		try {
+			db.beginTransaction();
+			result = db.insert("scene_device", null, contentValues);
+			db.setTransactionSuccessful();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			db.endTransaction();
+			db.close();
+		}
+		return result;
+	}
+
+	public boolean delScene_Device(int id) {
+		boolean b = false;
+		db = getWritableDatabase();
+		try {
+			db.beginTransaction();
+			db.execSQL("delete from scene_device where id=" + id);
+			db.setTransactionSuccessful();
+			b = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			db.endTransaction();
+			db.close();
+		}
+		return b;
+	}
+
+	public List<Scene_Device> selectScene_DeviceByRoomID(int roomid) {
+		db = this.getReadableDatabase();
+		Cursor cursor = db
+				.rawQuery(
+						"select d.id,d.name,d.channelid,d.type,d.roomid,s.id,s.state,s.sceneid from device d left join scene_device s on d.id=s.deviceid where roomid="
+								+ roomid, null);
+		List<Scene_Device> list = new ArrayList<Scene_Device>();
+		while (cursor.moveToNext()) {
+			Scene_Device scene_Device = new Scene_Device();
+			Device device = new Device();
+			device.setId(cursor.getInt(0));
+			device.setName(cursor.getString(1));
+			device.setChannelid(cursor.getInt(2));
+			device.setType(cursor.getInt(3));
+			device.setRoomid(cursor.getInt(4));
+			scene_Device.setId(cursor.getInt(5));
+			scene_Device.setState(cursor.getInt(6));
+			scene_Device.setSceneid(cursor.getInt(7));
+			scene_Device.setDevice(device);
+			list.add(scene_Device);
 		}
 		cursor.close();
 		db.close();

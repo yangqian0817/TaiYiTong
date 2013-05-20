@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:gravity="center" >
 
         <Button
@@ -14,6 +14,7 @@
             android:layout_width="@dimen/button_size"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/btn_bg"
             android:text="@string/tv_back" />
 
         <Button
@@ -21,6 +22,7 @@
             android:layout_width="@dimen/button_size"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/btn_bg"
             android:text="@string/tv_choose" />
 
         <Button
@@ -28,6 +30,7 @@
             android:layout_width="@dimen/button_size"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/btn_bg"
             android:text="@string/tv_silent" />
     </LinearLayout>
 
@@ -41,8 +44,9 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-             android:gravity="center_vertical"
-            android:layout_weight="1" >
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" >
 
             <Button
                 android:id="@+id/next_btn"
@@ -50,14 +54,16 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:background="@drawable/btn_bg"
                 android:text="@string/tv_next" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-             android:gravity="center_vertical"
-            android:layout_weight="1" >
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" >
 
             <Button
                 android:id="@+id/submit_btn"
@@ -65,6 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:background="@drawable/btn_bg"
                 android:text="@string/tv_ok" />
 
             <Button
@@ -74,6 +81,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="58dp"
                 android:layout_toLeftOf="@+id/submit_btn"
+                android:background="@drawable/btn_bg"
                 android:text="@string/v_sub" />
 
             <Button
@@ -83,15 +91,16 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="68dp"
                 android:layout_toRightOf="@+id/submit_btn"
+                android:background="@drawable/btn_bg"
                 android:text="@string/v_add" />
-
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_weight="1" >
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" >
 
             <Button
                 android:id="@+id/last_btn"
@@ -99,19 +108,32 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:background="@drawable/btn_bg"
                 android:text="@string/tv_last" />
+
+            <Button
+                android:id="@+id/number_btn"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/btn_bg"
+                android:text="@string/number" />
+
         </RelativeLayout>
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
         android:gravity="center" >
 
         <Button
             android:id="@+id/video_btn"
             android:layout_width="@dimen/button_size"
             android:layout_height="wrap_content"
+            android:background="@drawable/btn_bg"
             android:text="@string/tv_video" />
 
         <ToggleButton
@@ -120,6 +142,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:background="@drawable/btn_bg"
             android:text="@string/tv_open" />
     </RelativeLayout>
 

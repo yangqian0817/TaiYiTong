@@ -54,14 +54,14 @@ public class ArrayAdapter extends BaseAdapter {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = localinflater.inflate(R.layout.simple_listview_item,
 					null);
-		}
-		TextView textView = (TextView) convertView
-				.findViewById(R.id.textView1);
-		textView.setText(list.get(position));
-		if (position == selectItem) {
-			convertView.setBackgroundColor(R.color.setting_choose_bg);
-		} else {
-			convertView.setBackgroundColor(Color.TRANSPARENT);
+			TextView textView = (TextView) convertView
+					.findViewById(R.id.textView1);
+			textView.setText(list.get(position));
+			if (position == selectItem) {
+				convertView.setBackgroundColor(R.color.setting_choose_bg);
+			} else {
+				convertView.setBackgroundColor(Color.TRANSPARENT);
+			}
 		}
 		return convertView;
 	}

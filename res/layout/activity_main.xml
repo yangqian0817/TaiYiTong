@@ -19,22 +19,15 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical" >
 
                 <ImageView
-                    android:id="@+id/imageView1"
+                    android:id="@+id/imageView5"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
+                    android:layout_marginBottom="15dp"
                     android:layout_marginTop="15dp"
-                    android:src="@drawable/voice" />
-
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_marginTop="15dp"
-                    android:src="@drawable/query" />
+                    android:src="@drawable/device" />
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -51,12 +44,11 @@
                     android:src="@drawable/camera" />
 
                 <ImageView
-                    android:id="@+id/imageView5"
+                    android:id="@+id/imageView1"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_marginTop="15dp"
-                    android:layout_marginBottom="15dp"
-                    android:src="@drawable/device" />
+                    android:src="@drawable/voice" />
             </LinearLayout>
         </ScrollView>
 
@@ -123,26 +115,72 @@
                 android:text="@string/main_choose_area" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/setting_iv"
+        <ScrollView
+            android:id="@+id/scrollView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:src="@drawable/setting" />
+            android:scrollbars="none" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/setting_iv"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/setting" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/query" />
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
-        <ListView
-            android:id="@+id/room_list"
+        <LinearLayout
+            android:id="@+id/left_LL"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="2"
-            android:background="@drawable/left_bg" >
-        </ListView>
+            android:background="@drawable/left_bg"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="所有房间"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/off_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/main_shape_bg_btn"
+                android:text="@string/off" />
+
+            <ListView
+                android:id="@+id/room_list"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="8dp" >
+            </ListView>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/containerBody"
@@ -153,13 +191,39 @@
             android:gravity="center" >
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/device_list"
+        <LinearLayout
+            android:id="@+id/right_LL"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="2"
-            android:background="@drawable/right_bg" >
-        </ListView>
+            android:background="@drawable/middle_bg"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="所有房间"
+                android:textColor="@android:color/white" />
+
+            <ToggleButton
+                android:id="@+id/toggle_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/main_shape_bg_btn"
+                android:text="ToggleButton" />
+
+            <ListView
+                android:id="@+id/device_list"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="8dp" >
+            </ListView>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

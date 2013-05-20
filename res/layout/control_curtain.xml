@@ -20,16 +20,19 @@
             <Button
                 android:id="@+id/up_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="1"
+                android:background="@drawable/btn_bg"
                 android:text="@string/curtain_down" />
-
+
             <Button
                 android:id="@+id/down_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="1"
-                android:text="@string/curtain_up" />
+                android:background="@drawable/btn_bg"
+                android:text="@string/curtain_stop" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -40,22 +43,25 @@
             <Button
                 android:id="@+id/pause_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="1"
+                android:background="@drawable/btn_bg"
                 android:text="@string/curtain_stop" />
 
             <Button
                 android:id="@+id/lock_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="1"
+                android:background="@drawable/btn_bg"
                 android:text="@string/lock" />
 
             <Button
                 android:id="@+id/light_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="1"
+                android:background="@drawable/btn_bg"
                 android:text="@string/curtain_light" />
         </LinearLayout>
     </LinearLayout>

@@ -6,13 +6,14 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:gravity="center" >
 
         <Button
             android:id="@+id/exit_btn"
             android:layout_width="@dimen/button_size"
             android:layout_height="wrap_content"
+            android:background="@drawable/btn_bg"
             android:text="@string/music_exit" />
 
         <Button
@@ -21,6 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:background="@drawable/btn_bg"
             android:text="@string/music_menu" />
     </RelativeLayout>
 
@@ -34,6 +36,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:gravity="center" >
 
@@ -43,12 +46,14 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:background="@drawable/btn_bg"
                 android:text="@string/m_previous" />
         </RelativeLayout>
-
+
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:gravity="center" >
 
@@ -58,6 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:background="@drawable/btn_bg"
                 android:text="@string/tv_ok" />
 
             <Button
@@ -68,6 +74,7 @@
                 android:layout_alignBottom="@+id/submit_btn"
                 android:layout_marginRight="33dp"
                 android:layout_toLeftOf="@+id/submit_btn"
+                android:background="@drawable/btn_bg"
                 android:text="@string/v_sub" />
 
             <Button
@@ -78,13 +85,14 @@
                 android:layout_alignBottom="@+id/submit_btn"
                 android:layout_marginLeft="37dp"
                 android:layout_toRightOf="@+id/submit_btn"
+                android:background="@drawable/btn_bg"
                 android:text="@string/v_add" />
-
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:gravity="center" >
 
@@ -94,19 +102,22 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:background="@drawable/btn_bg"
                 android:text="@string/m_next" />
         </RelativeLayout>
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
         android:gravity="center" >
 
         <Button
             android:id="@+id/mode_btn"
             android:layout_width="@dimen/button_size"
             android:layout_height="wrap_content"
+            android:background="@drawable/btn_bg"
             android:text="@string/music_mode" />
 
         <ToggleButton
@@ -115,9 +126,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:textOn="@string/tv_open" 
+            android:background="@drawable/btn_bg"
             android:textOff="@string/tv_close"
-            />
+            android:textOn="@string/tv_open" />
     </RelativeLayout>
 
 </LinearLayout>

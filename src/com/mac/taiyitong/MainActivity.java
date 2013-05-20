@@ -21,15 +21,19 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.mac.taiyitong.adapter.MainDeviceListAdapter;
 import com.mac.taiyitong.adapter.RoomListAdapter;
+import com.mac.taiyitong.cons.Light_Cmd;
 import com.mac.taiyitong.entity.Device;
 import com.mac.taiyitong.entity.Room;
 import com.mac.taiyitong.util.SQLiteHelper;
@@ -39,7 +43,10 @@ public class MainActivity extends ActivityGroup {
 
 	ImageView setting_Iv;
 	Button choose_area_Btn;
+	ToggleButton toggle_Btn;
+	Button off_Btn;
 	String[] area = new String[256];
+	public int areaId_one = 0x00;
 	public int areaId = -1;
 	public int roomId = -1;
 	public int deviceId = -1;
@@ -67,6 +74,9 @@ public class MainActivity extends ActivityGroup {
 		setContentView(R.layout.activity_main);
 		setting_Iv = (ImageView) findViewById(R.id.setting_iv);
 		choose_area_Btn = (Button) findViewById(R.id.choose_area_btn);
+		toggle_Btn = (ToggleButton) findViewById(R.id.toggle_btn);
+		off_Btn = (Button) findViewById(R.id.off_btn);
+
 		room_list = (ListView) findViewById(R.id.room_list);
 		device_list = (ListView) findViewById(R.id.device_list);
 		container = (LinearLayout) findViewById(R.id.containerBody);
@@ -74,10 +84,9 @@ public class MainActivity extends ActivityGroup {
 		mode_hScrollView = (HorizontalScrollView) findViewById(R.id.mode_hScrollView);
 		// mode_hScrollView.add
 		sqLiteHelper = new SQLiteHelper(this, "tyt.db", null, 1);
-		preferences = getPreferences(MODE_PRIVATE);
+		preferences = getSharedPreferences("ip_port", MODE_PRIVATE);
 		ip = preferences.getString("ip", null);
 		port = preferences.getInt("port", 0);
-		connection();
 		getAreaData();
 		initMode();
 		room_data = new ArrayList<Room>();
@@ -98,9 +107,13 @@ public class MainActivity extends ActivityGroup {
 				} else if (msg.what == 1) {
 					Toast.makeText(MainActivity.this, "网络异常",
 							Toast.LENGTH_SHORT).show();
+				} else if (msg.what == 2) {
+					Toast.makeText(MainActivity.this, "连接成功",
+							Toast.LENGTH_SHORT).show();
 				}
 			}
 		};
+		connection();
 		choose_area_Btn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -125,6 +138,10 @@ public class MainActivity extends ActivityGroup {
 										deviceId = -1;
 										channelId = -1;
 										device_data.clear();
+										if (areaId == 0xff) {
+											areaId_one = 0x01;
+										}
+
 										room_data.addAll(sqLiteHelper
 												.selectRoomByAreaID(areaId));
 
@@ -139,6 +156,8 @@ public class MainActivity extends ActivityGroup {
 												.setSelectItem(deviceId);
 										device_list_adapter
 												.notifyDataSetInvalidated();
+										toggle_Btn.setVisibility(View.VISIBLE);
+										off_Btn.setVisibility(View.VISIBLE);
 									}
 								}).setNegativeButton("取消", null).show();
 			}
@@ -233,6 +252,13 @@ public class MainActivity extends ActivityGroup {
 					container.addView(getLocalActivityManager().startActivity(
 							"tv", intent).getDecorView());
 					break;
+				case 9:
+					intent.putExtra("type", 9);
+					intent.setClass(MainActivity.this,
+							ClothesHorseActivity.class);
+					container.addView(getLocalActivityManager().startActivity(
+							"tv", intent).getDecorView());
+					break;
 				default:
 					break;
 				}
@@ -249,11 +275,38 @@ public class MainActivity extends ActivityGroup {
 				startActivity(intent);
 			}
 		});
+
+		off_Btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				WriteUtil.write(MainActivity.this, areaId_one, areaId, roomId,
+						channelId, Light_Cmd.all_close.getVal());
+			}
+		});
+		toggle_Btn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					WriteUtil.write(MainActivity.this, areaId_one, areaId,
+							roomId, channelId,
+							Light_Cmd.all_light_open.getVal());
+				} else {
+					WriteUtil.write(MainActivity.this, areaId_one, areaId,
+							roomId, channelId,
+							Light_Cmd.all_light_close.getVal());
+				}
+			}
+		});
 	}
 
 	public void getAreaData() {
-		for (int i = 1; i <= 256; i++) {
-			area[i - 1] = "区域" + i;
+		for (int i = 0; i <= 255; i++) {
+			area[i] = "区域" + i;
 		}
 	}
 
@@ -308,13 +361,12 @@ public class MainActivity extends ActivityGroup {
 				try {
 					socket = new Socket(ip, port);
 					WriteUtil.outputStream = socket.getOutputStream();
+					handler.sendEmptyMessage(2);
 				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
-
 					handler.sendEmptyMessage(0);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-
 					handler.sendEmptyMessage(1);
 				}
 			}

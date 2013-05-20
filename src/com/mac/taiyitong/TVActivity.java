@@ -1,9 +1,13 @@
 package com.mac.taiyitong;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -25,11 +29,13 @@ public class TVActivity extends Activity {
 	Button last_Btn;
 	Button video_Btn;
 	ToggleButton toggle_Btn;
+	Button number_Btn;
 
 	int areaId_two = -1;
 	int areaId_one = 0x03;
 	int roomId = -1;
 	int channelId = -1;
+	Dialog dialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +52,9 @@ public class TVActivity extends Activity {
 		last_Btn = (Button) findViewById(R.id.last_btn);
 		video_Btn = (Button) findViewById(R.id.video_btn);
 		toggle_Btn = (ToggleButton) findViewById(R.id.toggle_btn);
+		number_Btn = (Button) findViewById(R.id.number_btn);
 		Bundle bundle = getIntent().getExtras();
+
 		if (bundle != null) {
 			roomId = bundle.getInt("roomId");
 			areaId_two = bundle.getInt("areaId");
@@ -71,6 +79,149 @@ public class TVActivity extends Activity {
 				// TODO Auto-generated method stub
 				WriteUtil.write(TVActivity.this, areaId_one, areaId_two,
 						roomId, channelId, TV_Cmd.choose.getVal());
+			}
+		});
+		number_Btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dialog = new AlertDialog.Builder(TVActivity.this).create();
+				dialog.show();
+				// dialog.getWindow().setContentView(
+				// R.layout.control_tv_choose_dialog);
+				LayoutInflater factory = LayoutInflater.from(TVActivity.this);
+				View view = factory.inflate(R.layout.control_tv_choose_dialog,
+						null);
+				Button btn_0 = (Button) view.findViewById(R.id.button0);
+				Button btn_1 = (Button) view.findViewById(R.id.button1);
+				Button btn_2 = (Button) view.findViewById(R.id.button2);
+				Button btn_3 = (Button) view.findViewById(R.id.button3);
+				Button btn_4 = (Button) view.findViewById(R.id.button4);
+				Button btn_5 = (Button) view.findViewById(R.id.button5);
+				Button btn_6 = (Button) view.findViewById(R.id.button6);
+				Button btn_7 = (Button) view.findViewById(R.id.button7);
+				Button btn_8 = (Button) view.findViewById(R.id.button8);
+				Button btn_9 = (Button) view.findViewById(R.id.button9);
+				Button btn_ok = (Button) view.findViewById(R.id.submit_btn);
+				btn_0.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						WriteUtil.write(TVActivity.this, areaId_one,
+								areaId_two, roomId, channelId,
+								TV_Cmd.v_0.getVal());
+					}
+				});
+				btn_1.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						WriteUtil.write(TVActivity.this, areaId_one,
+								areaId_two, roomId, channelId,
+								TV_Cmd.v_1.getVal());
+					}
+				});
+				btn_2.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						WriteUtil.write(TVActivity.this, areaId_one,
+								areaId_two, roomId, channelId,
+								TV_Cmd.v_2.getVal());
+					}
+				});
+				btn_3.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						WriteUtil.write(TVActivity.this, areaId_one,
+								areaId_two, roomId, channelId,
+								TV_Cmd.v_3.getVal());
+					}
+				});
+				btn_4.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						WriteUtil.write(TVActivity.this, areaId_one,
+								areaId_two, roomId, channelId,
+								TV_Cmd.v_4.getVal());
+					}
+				});
+				btn_5.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						WriteUtil.write(TVActivity.this, areaId_one,
+								areaId_two, roomId, channelId,
+								TV_Cmd.v_5.getVal());
+					}
+				});
+				btn_6.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						WriteUtil.write(TVActivity.this, areaId_one,
+								areaId_two, roomId, channelId,
+								TV_Cmd.v_6.getVal());
+					}
+				});
+				btn_7.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						WriteUtil.write(TVActivity.this, areaId_one,
+								areaId_two, roomId, channelId,
+								TV_Cmd.v_7.getVal());
+					}
+				});
+				btn_8.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						WriteUtil.write(TVActivity.this, areaId_one,
+								areaId_two, roomId, channelId,
+								TV_Cmd.v_8.getVal());
+					}
+				});
+				btn_9.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						WriteUtil.write(TVActivity.this, areaId_one,
+								areaId_two, roomId, channelId,
+								TV_Cmd.v_9.getVal());
+					}
+				});
+				btn_ok.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						dialog.dismiss();
+					}
+				});
+
+				dialog.getWindow().setContentView(view);
+				WindowManager.LayoutParams layoutParams = dialog.getWindow()
+						.getAttributes();
+
+				layoutParams.width = 460; // ÐÞ¸Ä´°Ìå¿í¸ß
+
+				layoutParams.height = 350;
+				dialog.getWindow().setAttributes(layoutParams);
+
 			}
 		});
 		slience_Btn.setOnClickListener(new OnClickListener() {
@@ -154,5 +305,6 @@ public class TVActivity extends Activity {
 				}
 			}
 		});
+
 	}
 }
