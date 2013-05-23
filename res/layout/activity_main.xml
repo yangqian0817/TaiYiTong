@@ -47,6 +47,7 @@
                     android:id="@+id/imageView1"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
+                    android:layout_marginBottom="15dp"
                     android:layout_marginTop="15dp"
                     android:src="@drawable/voice" />
             </LinearLayout>
@@ -163,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="所有房间"
+                android:text="@string/main_allroom"
                 android:textColor="@android:color/white" />
 
             <Button
@@ -206,7 +207,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="所有房间"
+                android:text="@string/main_alldevice"
                 android:textColor="@android:color/white" />
 
             <ToggleButton

@@ -44,6 +44,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		if (oldVersion != newVersion) {
 			db.execSQL("drop table if exists room");
 			db.execSQL("drop table if exists device");
+			db.execSQL("drop table if exists channel");
+			db.execSQL("drop table if exists scene_device");
+			db.execSQL("drop table if exists scene");
 			onCreate(db);
 		}
 	}
@@ -214,7 +217,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		try {
 			db.beginTransaction();
 			db.execSQL("delete from scene_device where sceneid=" + id);
-			db.execSQL("delete from scene_room where sceneid=" + id);
 			db.execSQL("delete from scene where id=" + id);
 			db.setTransactionSuccessful();
 			b = true;
@@ -228,13 +230,15 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		return b;
 	}
 
-	public void modifyScene(ContentValues contentValues) {
+	public boolean modifyScene(ContentValues contentValues) {
 		db = getWritableDatabase();
+		boolean b = false;
 		try {
 			db.beginTransaction();
-			db.update("scene", contentValues, "id",
+			db.update("scene", contentValues, "id=?",
 					new String[] { contentValues.getAsInteger("id") + "" });
 			db.setTransactionSuccessful();
+			b = true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -242,6 +246,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 			db.endTransaction();
 			db.close();
 		}
+		return b;
 	}
 
 	public List<Scene> selectSceneByAreaID(int id) {
@@ -300,7 +305,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		db = this.getReadableDatabase();
 		Cursor cursor = db
 				.rawQuery(
-						"select d.id,d.name,d.channelid,d.type,d.roomid,s.id,s.state,s.sceneid from device d left join scene_device s on d.id=s.deviceid where roomid="
+						"select d.id,d.name,d.channelid,d.type,d.roomid,s.id,s.state,s.sceneid from device d left outer join scene_device s on d.id=s.deviceid where roomid="
 								+ roomid, null);
 		List<Scene_Device> list = new ArrayList<Scene_Device>();
 		while (cursor.moveToNext()) {

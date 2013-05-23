@@ -50,14 +50,22 @@ public class MainDeviceListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
+		ViewHolder holder = null;
 		if (convertView == null) {
 			LayoutInflater localinflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = localinflater.inflate(R.layout.simple_listview_item,
 					null);
+			holder = new ViewHolder();
+			holder.textView = (TextView) convertView
+					.findViewById(R.id.textView1);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+			resetViewHolder(holder);
 		}
-		TextView textView = (TextView) convertView.findViewById(R.id.textView1);
-		textView.setText(list.get(position).getName());
+
+		holder.textView.setText(list.get(position).getName());
 		if (position == selectItem) {
 			convertView.setBackgroundResource(R.drawable.list_check_bg);
 		} else {
@@ -71,4 +79,12 @@ public class MainDeviceListAdapter extends BaseAdapter {
 	}
 
 	private int selectItem = -1;
+
+	class ViewHolder {
+		TextView textView;
+	}
+
+	void resetViewHolder(ViewHolder viewHolder) {
+		viewHolder.textView.setText(null);
+	}
 }

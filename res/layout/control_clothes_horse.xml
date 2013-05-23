@@ -7,13 +7,13 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="@dimen/padding_large" >
+        android:gravity="center" >
 
         <ToggleButton
-            android:id="@+id/light_switch"
-            android:layout_width="@dimen/button_size"
+            android:id="@+id/toggle_btn"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="@drawable/btn_bg"
             android:text="ToggleButton" />
 
@@ -24,6 +24,14 @@
             android:layout_weight="1"
             android:background="@drawable/btn_bg"
             android:text="@string/curtain_stop" />
+
+        <Button
+            android:id="@+id/light_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/btn_bg"
+            android:text="@string/curtain_light" />
     </LinearLayout>
 
 </LinearLayout>

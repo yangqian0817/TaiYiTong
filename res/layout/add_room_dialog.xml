@@ -59,14 +59,14 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="添加" />
+            android:text="@string/add" />
 
         <Button
             android:id="@+id/cancel_btn"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="取消" />
+            android:text="@string/setting_cancel" />
     </LinearLayout>
 
 </LinearLayout>

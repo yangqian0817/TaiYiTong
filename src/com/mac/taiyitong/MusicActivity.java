@@ -24,7 +24,7 @@ public class MusicActivity extends Activity {
 	Button mode_Btn;
 	ToggleButton toggle_Btn;
 	int areaId_two = -1;
-	int areaId_one = 0x00;
+	int areaId_one = 0x30;
 	int roomId = -1;
 	int channelId = -1;
 

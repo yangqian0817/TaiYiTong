@@ -1,8 +1,10 @@
 <resources>
 
-    <string name="app_name">TaiYiTong</string>
+    <string name="app_name">TYTSmart</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
+    <string name="main_allroom">所有房间</string>
+    <string name="main_alldevice">所有设备</string>
     <string name="setting_title">设置</string>
     <string name="setting_scene">场景</string>
     <string name="setting_area">请选择区域</string>
@@ -19,6 +21,7 @@
     <string name="device_name">设备名称</string>
     <string name="device_type">设备类型</string>
     <string name="main_choose_area">选择区域</string>
+    <string name="area">区域</string>
     <string name="setting_ip">配置IP</string>
     <string name="setting_port">端口</string>
     <string name="setting_connect">连接</string>
@@ -59,6 +62,56 @@
     <string name="curtain_light">亮灯</string>
     <string name="room_name">房间名</string>
     <string name="off">关闭</string>
+    <string name="on">打开</string>
     <string name="number">数字按钮</string>
+    <string name="unlock">解锁</string>
+    <string name="connection_ok">连接成功</string>
+    <string name="io_exception">网络异常</string>
+    <string name="ip_port_error">IP地址和端口错误</string>
+    <string name="room_out_msg">最多添加256个设备</string>
+    <string name="name_null_msg">名称不能为空</string>
+    <string name="add_ok_msg">添加成功</string>
+    <string name="add_fail_msg">添加失败</string>
+    <string name="delete_ok_msg">删除成功</string>
+    <string name="delete_fail_msg">删除失败</string>
+    <string name="choose_delete_item_msg">请选中要删除的项目</string>
+    <string name="choose_add_item_area_msg">请选中要添加的项目的区域</string>
+    <string name="choose_add_item_room_msg">请选中要添加的项目的房间</string>
+    <string name="input_ip_msg">请输入IP地址</string>
+    <string name="input_port_msg">请输入端口号</string>
+    <string name="setting_ip_port_msg">请设置IP地址和端口</string>
+    <string name="connect_msg">请先进行连接再操作</string>
+    <string name="exit_msg">确定要退出吗?</string>
+    <string name="dialog_msg">提示</string>
+    <string name="add">添加</string>
+    <string name="verifying">正在验证...</string>
+    <string name="verifying_success">验证成功</string>
+    <string name="verifying_fail">验证失败</string>
+    <string name="password_verifying">密码验证</string>
+    <string name="password_error">密码错误</string>
+    
+
+    <string-array name="setting_data">
+        <item>房间/设备设置</item>
+        <item>远程控制设置</item>
+        <item>场景设置</item>
+        <item>密码设置</item>
+    </string-array>
+<!--         <item>国际化</item> -->
+    <string-array name="device_type">
+        <item>可调光灯</item>
+        <item>不可调光灯</item>
+        <item>通用电器</item>
+        <item>窗帘类</item>
+        <item>空调</item>
+        <item>地采暖</item>
+        <item>背景音乐</item>
+        <item>电视机</item>
+        <item>晾衣架</item>
+    </string-array>
+    <string-array name="language">
+        <item>中文</item>
+        <item>英文</item>
+    </string-array>
 
 </resources>

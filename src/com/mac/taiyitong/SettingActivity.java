@@ -60,9 +60,6 @@ public class SettingActivity extends Activity {
 	ArrayAdapter setting_area_list_adapter;
 	RoomListAdapter setting_room_list_adapter;
 	DeviceListAdapter setting_device_list_adapter;
-	String[] setting_data = new String[] { "房间/设备设置", "远程控制设置", "场景设置" };
-	String[] device_type = new String[] { "可调光灯", "不可调光灯", "通用电器", "窗帘类", "空调",
-			"地采暖", "背景音乐", "电视机", "晾衣架" };
 	SharedPreferences sharedPreferences;
 	SharedPreferences.Editor editor;
 	Handler handler;
@@ -97,20 +94,22 @@ public class SettingActivity extends Activity {
 				// TODO Auto-generated method stub
 				super.handleMessage(msg);
 				if (msg.what == 0) {
-					Toast.makeText(SettingActivity.this, "IP地址和端口错误",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(SettingActivity.this,
+							R.string.ip_port_error, Toast.LENGTH_SHORT).show();
 				} else if (msg.what == 1) {
-					Toast.makeText(SettingActivity.this, "网络异常",
+					Toast.makeText(SettingActivity.this, R.string.io_exception,
 							Toast.LENGTH_SHORT).show();
 				} else if (msg.what == 2) {
-					Toast.makeText(SettingActivity.this, "连接成功",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(SettingActivity.this,
+							R.string.connection_ok, Toast.LENGTH_SHORT).show();
+					WriteUtil.showPwdDialog(SettingActivity.this);
 				}
 			}
 		};
 
 		setting_romantic_list_adapter = new android.widget.ArrayAdapter<String>(
-				this, R.layout.simple_listview_item, setting_data);
+				this, R.layout.simple_listview_item, getResources()
+						.getStringArray(R.array.setting_data));
 		setting_romantic_list.setAdapter(setting_romantic_list_adapter);
 
 		setting_romantic_list.setOnItemClickListener(new OnItemClickListener() {
@@ -151,15 +150,15 @@ public class SettingActivity extends Activity {
 											.toString().trim();
 									if (n_ip_Str == null || "".equals(n_ip_Str)) {
 										Toast.makeText(SettingActivity.this,
-												"请输入IP地址", Toast.LENGTH_LONG)
-												.show();
+												R.string.input_ip_msg,
+												Toast.LENGTH_LONG).show();
 										return;
 									}
 									if (n_port_Str == null
 											|| "".equals(n_port_Str)) {
 										Toast.makeText(SettingActivity.this,
-												"请输入端口号", Toast.LENGTH_LONG)
-												.show();
+												R.string.input_port_msg,
+												Toast.LENGTH_LONG).show();
 										return;
 									}
 									editor.clear();
@@ -186,7 +185,39 @@ public class SettingActivity extends Activity {
 					intent.setClass(SettingActivity.this,
 							SceneSettingActivity.class);
 					startActivity(intent);
+				} else if (arg2 == 3) {
+					Intent intent = new Intent();
+					intent.setClass(SettingActivity.this, LockActivity.class);
+					startActivity(intent);
 				}
+				// else if (arg2 == 4) {
+				// new AlertDialog.Builder(SettingActivity.this)
+				// .setSingleChoiceItems(R.array.language, 0,
+				// new DialogInterface.OnClickListener() {
+				//
+				// @Override
+				// public void onClick(
+				// DialogInterface dialog,
+				// int which) {
+				// // TODO Auto-generated method stub
+				// Resources resources = getResources();// 获得res资源对象
+				// Configuration config = resources
+				// .getConfiguration();// 获得设置对象
+				// DisplayMetrics dm = resources
+				// .getDisplayMetrics();// 获得屏幕参数：主要是分辨率，像素等。
+				// if (which == 0) {
+				// config.locale = Locale.SIMPLIFIED_CHINESE; // 简体中文
+				// } else {
+				// config.locale = Locale.ENGLISH;
+				// }
+				// resources.updateConfiguration(
+				// config, dm);
+				// dialog.dismiss();
+				// }
+				// })
+				// .setNegativeButton(R.string.setting_cancel, null)
+				// .show();
+				// }
 			}
 		});
 
@@ -217,8 +248,9 @@ public class SettingActivity extends Activity {
 				room_data.addAll(sqLiteHelper.selectRoomByAreaID(areaId));
 
 				setting_room_list_adapter.notifyDataSetChanged();
-				setting_room_list_adapter.notifyDataSetInvalidated();
 				setting_room_list_adapter.setSelectItem(roomId);
+				setting_room_list_adapter.notifyDataSetInvalidated();
+
 				setting_device_list_adapter.notifyDataSetChanged();
 				setting_device_list_adapter.setSelectItem(deviceId);
 				setting_device_list_adapter.notifyDataSetInvalidated();
@@ -234,9 +266,9 @@ public class SettingActivity extends Activity {
 				if (roomId == arg2) {
 					return;
 				}
+				roomId = arg2;
 				setting_room_list_adapter.setSelectItem(arg2);
 				setting_room_list_adapter.notifyDataSetInvalidated();
-				roomId = arg2;
 				deviceId = -1;
 				device_data.clear();
 				device_data.addAll(sqLiteHelper.selectDeviceByRoomID(room_data
@@ -266,7 +298,8 @@ public class SettingActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (areaId == -1) {
-					Toast.makeText(SettingActivity.this, "请选中要添加房间的区域",
+					Toast.makeText(SettingActivity.this,
+							R.string.choose_add_item_area_msg,
 							Toast.LENGTH_LONG).show();
 					return;
 				}
@@ -281,7 +314,7 @@ public class SettingActivity extends Activity {
 				room_num_List.clear();
 				room_num_List.addAll(sqLiteHelper.selectNotInRoomNum(areaId));
 				if (room_num_List.size() == 0) {
-					Toast.makeText(SettingActivity.this, "最多添加256个房间",
+					Toast.makeText(SettingActivity.this, R.string.room_out_msg,
 							Toast.LENGTH_LONG).show();
 					return;
 				}
@@ -313,8 +346,9 @@ public class SettingActivity extends Activity {
 						String roomName = room_name_Et.getText().toString()
 								.trim();
 						if (roomName == null || "".equals(roomName)) {
-							Toast.makeText(SettingActivity.this, "名称不能为空",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(SettingActivity.this,
+									R.string.name_null_msg, Toast.LENGTH_LONG)
+									.show();
 							return;
 						}
 
@@ -330,14 +364,16 @@ public class SettingActivity extends Activity {
 						contentValues.put("roomnum", room_num);
 						int result = (int) sqLiteHelper.addRoom(contentValues);
 						if (result != -1) {
-							Toast.makeText(SettingActivity.this, "添加成功",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(SettingActivity.this,
+									R.string.add_ok_msg, Toast.LENGTH_LONG)
+									.show();
 							room.setId(result);
 							room_data.add(room);
 							setting_room_list_adapter.notifyDataSetChanged();
 						} else {
-							Toast.makeText(SettingActivity.this, "添加失败",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(SettingActivity.this,
+									R.string.add_fail_msg, Toast.LENGTH_LONG)
+									.show();
 						}
 						dialog.dismiss();
 					}
@@ -352,7 +388,8 @@ public class SettingActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (roomId == -1) {
-					Toast.makeText(SettingActivity.this, "请选中添加设备的房间",
+					Toast.makeText(SettingActivity.this,
+							R.string.choose_add_item_room_msg,
 							Toast.LENGTH_LONG).show();
 					return;
 				}
@@ -368,7 +405,7 @@ public class SettingActivity extends Activity {
 
 				android.widget.ArrayAdapter<String> device_adapter = new android.widget.ArrayAdapter<String>(
 						SettingActivity.this, R.layout.simple_spinner_item,
-						device_type);
+						getResources().getStringArray(R.array.device_type));
 				device_adapter
 						.setDropDownViewResource(android.R.layout.simple_spinner_item);
 				device_type_sp.setAdapter(device_adapter);
@@ -377,7 +414,7 @@ public class SettingActivity extends Activity {
 				channelid_List.addAll(sqLiteHelper
 						.selectNotInChannelID(room_data.get(roomId).getId()));
 				if (channelid_List.size() == 0) {
-					Toast.makeText(SettingActivity.this, "最多添加256个设备",
+					Toast.makeText(SettingActivity.this, R.string.room_out_msg,
 							Toast.LENGTH_LONG).show();
 					return;
 				}
@@ -409,8 +446,9 @@ public class SettingActivity extends Activity {
 						String deviceName = device_name_Et.getText().toString()
 								.trim();
 						if (deviceName == null || "".equals(deviceName)) {
-							Toast.makeText(SettingActivity.this, "名称不能为空",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(SettingActivity.this,
+									R.string.name_null_msg, Toast.LENGTH_LONG)
+									.show();
 							return;
 						}
 
@@ -433,14 +471,16 @@ public class SettingActivity extends Activity {
 						int result = (int) sqLiteHelper
 								.addDevice(contentValues);
 						if (result != -1) {
-							Toast.makeText(SettingActivity.this, "添加成功",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(SettingActivity.this,
+									R.string.add_ok_msg, Toast.LENGTH_LONG)
+									.show();
 							device.setId(result);
 							device_data.add(device);
 							setting_device_list_adapter.notifyDataSetChanged();
 						} else {
-							Toast.makeText(SettingActivity.this, "添加失败",
-									Toast.LENGTH_LONG).show();
+							Toast.makeText(SettingActivity.this,
+									R.string.add_fail_msg, Toast.LENGTH_LONG)
+									.show();
 						}
 						dialog.dismiss();
 					}
@@ -455,8 +495,9 @@ public class SettingActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (roomId == -1) {
-					Toast.makeText(SettingActivity.this, "请选中要删除的项目",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(SettingActivity.this,
+							R.string.choose_delete_item_msg, Toast.LENGTH_LONG)
+							.show();
 					return;
 				}
 				if (sqLiteHelper.delRoom(room_data.get(roomId).getId())) {
@@ -464,11 +505,11 @@ public class SettingActivity extends Activity {
 					setting_room_list_adapter.notifyDataSetChanged();
 					device_data.clear();
 					setting_device_list_adapter.notifyDataSetChanged();
-					Toast.makeText(SettingActivity.this, "删除成功",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(SettingActivity.this,
+							R.string.delete_ok_msg, Toast.LENGTH_LONG).show();
 				} else {
-					Toast.makeText(SettingActivity.this, "删除失败",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(SettingActivity.this,
+							R.string.delete_fail_msg, Toast.LENGTH_LONG).show();
 				}
 			}
 		});
@@ -479,18 +520,19 @@ public class SettingActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (deviceId == -1) {
-					Toast.makeText(SettingActivity.this, "请选中要删除的项目",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(SettingActivity.this,
+							R.string.choose_delete_item_msg, Toast.LENGTH_LONG)
+							.show();
 					return;
 				}
 				if (sqLiteHelper.delDevice(device_data.get(deviceId).getId())) {
 					device_data.remove(deviceId);
 					setting_device_list_adapter.notifyDataSetChanged();
-					Toast.makeText(SettingActivity.this, "删除成功",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(SettingActivity.this,
+							R.string.delete_ok_msg, Toast.LENGTH_LONG).show();
 				} else {
-					Toast.makeText(SettingActivity.this, "删除失败",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(SettingActivity.this,
+							R.string.delete_fail_msg, Toast.LENGTH_LONG).show();
 				}
 			}
 		});
@@ -512,7 +554,7 @@ public class SettingActivity extends Activity {
 		channelid_List = new ArrayList<String>();
 		room_num_List = new ArrayList<String>();
 		for (int i = 0; i <= 255; i++) {
-			area_data.add("区域" + i);
+			area_data.add(getResources().getString(R.string.area) + i);
 		}
 	}
 
@@ -537,6 +579,8 @@ public class SettingActivity extends Activity {
 					MainActivity.socket = new Socket(ip, port);
 					WriteUtil.outputStream = MainActivity.socket
 							.getOutputStream();
+					WriteUtil.inputStream = MainActivity.socket
+							.getInputStream();
 					handler.sendEmptyMessage(2);
 				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block

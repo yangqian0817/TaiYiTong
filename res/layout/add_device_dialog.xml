@@ -12,7 +12,7 @@
 
         <TextView
             android:id="@+id/textView1"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="@string/device_name"
             android:textSize="@dimen/text_size" />
@@ -35,7 +35,7 @@
 
         <TextView
             android:id="@+id/textView2"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="@string/device_type"
             android:textSize="@dimen/text_size" />
@@ -53,7 +53,7 @@
 
         <TextView
             android:id="@+id/textView2"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="@string/setting_channel"
             android:textSize="@dimen/text_size" />
@@ -76,14 +76,14 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="添加" />
+            android:text="@string/add" />
 
         <Button
             android:id="@+id/cancel_btn"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="取消" />
+            android:text="@string/setting_cancel" />
     </LinearLayout>
 
 </LinearLayout>

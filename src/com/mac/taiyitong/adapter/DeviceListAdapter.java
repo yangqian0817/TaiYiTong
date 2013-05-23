@@ -50,52 +50,62 @@ public class DeviceListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
+		ViewHolder holder = null;
 		if (convertView == null) {
 			LayoutInflater localinflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = localinflater
 					.inflate(R.layout.device_list_item, null);
+
+			holder = new ViewHolder();
+
+			holder.channelid_tv = (TextView) convertView
+					.findViewById(R.id.channelid_tv);
+			holder.device_name_tv = (TextView) convertView
+					.findViewById(R.id.device_name_tv);
+			holder.device_type_tv = (TextView) convertView
+					.findViewById(R.id.device_type_tv);
+			convertView.setTag(holder);
+
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+			resetViewHolder(holder);
 		}
-		TextView channelid_tv = (TextView) convertView
-				.findViewById(R.id.channelid_tv);
-		TextView device_name_tv = (TextView) convertView
-				.findViewById(R.id.device_name_tv);
-		TextView device_type_tv = (TextView) convertView
-				.findViewById(R.id.device_type_tv);
+
 		Device device = list.get(position);
-		channelid_tv.setText(device.getChannelid() + "");
-		device_name_tv.setText(device.getName());
+		holder.channelid_tv.setText(device.getChannelid() + "");
+		holder.device_name_tv.setText(device.getName());
 		switch (device.getType()) {
 		case 1:
-			device_type_tv.setText("可调光灯");
+			holder.device_type_tv.setText("可调光灯");
 			break;
 		case 2:
-			device_type_tv.setText("不可调光灯");
+			holder.device_type_tv.setText("不可调光灯");
 			break;
 
 		case 3:
-			device_type_tv.setText("通用电器");
+			holder.device_type_tv.setText("通用电器");
 			break;
 
 		case 4:
-			device_type_tv.setText("窗帘类");
+			holder.device_type_tv.setText("窗帘类");
 			break;
 
 		case 5:
-			device_type_tv.setText("空调");
+			holder.device_type_tv.setText("空调");
 			break;
 
 		case 6:
-			device_type_tv.setText("地采暖");
+			holder.device_type_tv.setText("地采暖");
 			break;
 		case 7:
-			device_type_tv.setText("背景音乐");
+			holder.device_type_tv.setText("背景音乐");
 			break;
 		case 8:
-			device_type_tv.setText("电视机");
+			holder.device_type_tv.setText("电视机");
 			break;
 		case 9:
-			device_type_tv.setText("晾衣架");
+			holder.device_type_tv.setText("晾衣架");
 			break;
 		default:
 			break;
@@ -113,4 +123,16 @@ public class DeviceListAdapter extends BaseAdapter {
 	}
 
 	private int selectItem = -1;
+
+	class ViewHolder {
+		TextView channelid_tv;
+		TextView device_name_tv;
+		TextView device_type_tv;
+	}
+
+	void resetViewHolder(ViewHolder viewHolder) {
+		viewHolder.channelid_tv.setText(null);
+		viewHolder.device_name_tv.setText(null);
+		viewHolder.device_type_tv.setText(null);
+	}
 }

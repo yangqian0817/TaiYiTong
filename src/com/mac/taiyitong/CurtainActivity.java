@@ -5,35 +5,30 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ToggleButton;
 
 import com.mac.taiyitong.cons.Curtain_Cmd;
 import com.mac.taiyitong.util.WriteUtil;
 
 public class CurtainActivity extends Activity {
-
+	int type = -1;
 	int areaId_two = -1;
-	int areaId_one = 0x30;
+	int areaId_one = 0x00;
 	int roomId = -1;
 	int channelId = -1;
-	Button up_Btn;
-	Button down_Btn;
+	ToggleButton switch_Btn;
 	Button pause_Btn;
-	Button lock_Btn;
-	Button light_Btn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.control_curtain);
-		up_Btn = (Button) findViewById(R.id.up_btn);
-		down_Btn = (Button) findViewById(R.id.down_btn);
-		pause_Btn = (Button) findViewById(R.id.pause_btn);
-		lock_Btn = (Button) findViewById(R.id.lock_btn);
-		light_Btn = (Button) findViewById(R.id.light_btn);
-
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
+			type = bundle.getInt("type");
 			roomId = bundle.getInt("roomId");
 			areaId_two = bundle.getInt("areaId");
 			if (areaId_two == 0xff) {
@@ -41,27 +36,25 @@ public class CurtainActivity extends Activity {
 			}
 			channelId = bundle.getInt("channelId");
 		}
-
-		up_Btn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				WriteUtil.write(CurtainActivity.this, areaId_one, areaId_two,
-						roomId, channelId, Curtain_Cmd.up.getVal());
-			}
-		});
-
-		down_Btn.setOnClickListener(new OnClickListener() {
+		switch_Btn = (ToggleButton) findViewById(R.id.light_switch);
+		pause_Btn = (Button) findViewById(R.id.pause_btn);
+		switch_Btn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
-			public void onClick(View v) {
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
 				// TODO Auto-generated method stub
-				WriteUtil.write(CurtainActivity.this, areaId_one, areaId_two,
-						roomId, channelId, Curtain_Cmd.down.getVal());
+				if (isChecked) {
+					WriteUtil.write(CurtainActivity.this, areaId_one,
+							areaId_two, roomId, channelId,
+							Curtain_Cmd.close.getVal());
+				} else {
+					WriteUtil.write(CurtainActivity.this, areaId_one,
+							areaId_two, roomId, channelId,
+							Curtain_Cmd.open.getVal());
+				}
 			}
 		});
-
 		pause_Btn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -72,26 +65,5 @@ public class CurtainActivity extends Activity {
 			}
 		});
 
-		lock_Btn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				WriteUtil.write(CurtainActivity.this, areaId_one, areaId_two,
-						roomId, channelId, Curtain_Cmd.lock.getVal());
-			}
-		});
-
-		light_Btn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				WriteUtil.write(CurtainActivity.this, areaId_one, areaId_two,
-						roomId, channelId, Curtain_Cmd.light.getVal());
-			}
-		});
-
 	}
-
 }

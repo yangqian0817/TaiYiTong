@@ -49,20 +49,31 @@ public class ArrayAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
+		ViewHolder holder = null;
 		if (convertView == null) {
 			LayoutInflater localinflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = localinflater.inflate(R.layout.simple_listview_item,
 					null);
-			TextView textView = (TextView) convertView
+			holder = new ViewHolder();
+			holder.textView = (TextView) convertView
 					.findViewById(R.id.textView1);
-			textView.setText(list.get(position));
-			if (position == selectItem) {
-				convertView.setBackgroundColor(R.color.setting_choose_bg);
-			} else {
-				convertView.setBackgroundColor(Color.TRANSPARENT);
-			}
+			convertView.setTag(holder);
+
+			// TextView textView = (TextView) convertView
+			// .findViewById(R.id.textView1);
+			// textView.setText(list.get(position));
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+			resetViewHolder(holder);
 		}
+		if (position == selectItem) {
+			convertView.setBackgroundColor(R.color.setting_choose_bg);
+		} else {
+			convertView.setBackgroundColor(Color.TRANSPARENT);
+		}
+
+		holder.textView.setText(list.get(position));
 		return convertView;
 	}
 
@@ -71,4 +82,12 @@ public class ArrayAdapter extends BaseAdapter {
 	}
 
 	private int selectItem = -1;
+
+	class ViewHolder {
+		TextView textView;
+	}
+
+	void resetViewHolder(ViewHolder viewHolder) {
+		viewHolder.textView.setText(null);
+	}
 }

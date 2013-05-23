@@ -41,7 +41,7 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".CurtainActivity"
+            android:name=".ClothesHorseActivity"
             android:screenOrientation="landscape" >
         </activity>
         <activity
@@ -61,11 +61,15 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".ClothesHorseActivity"
+            android:name=".CurtainActivity"
             android:screenOrientation="landscape" >
         </activity>
         <activity
             android:name=".SceneSettingActivity"
+            android:screenOrientation="landscape" >
+        </activity>
+           <activity
+            android:name=".LockActivity"
             android:screenOrientation="landscape" >
         </activity>
     </application>

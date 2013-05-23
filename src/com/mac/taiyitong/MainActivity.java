@@ -36,6 +36,8 @@ import com.mac.taiyitong.adapter.RoomListAdapter;
 import com.mac.taiyitong.cons.Light_Cmd;
 import com.mac.taiyitong.entity.Device;
 import com.mac.taiyitong.entity.Room;
+import com.mac.taiyitong.entity.Scene;
+import com.mac.taiyitong.entity.Scene_Device;
 import com.mac.taiyitong.util.SQLiteHelper;
 import com.mac.taiyitong.util.WriteUtil;
 
@@ -67,6 +69,8 @@ public class MainActivity extends ActivityGroup {
 	int port = 0;
 	public static Socket socket;
 	Handler handler;
+	List<String> sceneStrList;
+	List<Scene> sceneList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,10 +91,13 @@ public class MainActivity extends ActivityGroup {
 		preferences = getSharedPreferences("ip_port", MODE_PRIVATE);
 		ip = preferences.getString("ip", null);
 		port = preferences.getInt("port", 0);
-		getAreaData();
-		initMode();
+		sceneStrList = new ArrayList<String>();
+		sceneList = new ArrayList<Scene>();
 		room_data = new ArrayList<Room>();
 		device_data = new ArrayList<Device>();
+		getAreaData();
+		initMode();
+
 		room_list_adapter = new RoomListAdapter(MainActivity.this, room_data, 0);
 		device_list_adapter = new MainDeviceListAdapter(MainActivity.this,
 				device_data);
@@ -102,14 +109,15 @@ public class MainActivity extends ActivityGroup {
 				// TODO Auto-generated method stub
 				super.handleMessage(msg);
 				if (msg.what == 0) {
-					Toast.makeText(MainActivity.this, "IP地址和端口错误",
+					Toast.makeText(MainActivity.this, R.string.ip_port_error,
 							Toast.LENGTH_SHORT).show();
 				} else if (msg.what == 1) {
-					Toast.makeText(MainActivity.this, "网络异常",
+					Toast.makeText(MainActivity.this, R.string.io_exception,
 							Toast.LENGTH_SHORT).show();
 				} else if (msg.what == 2) {
-					Toast.makeText(MainActivity.this, "连接成功",
+					Toast.makeText(MainActivity.this, R.string.connection_ok,
 							Toast.LENGTH_SHORT).show();
+					WriteUtil.showPwdDialog(MainActivity.this);
 				}
 			}
 		};
@@ -144,7 +152,10 @@ public class MainActivity extends ActivityGroup {
 
 										room_data.addAll(sqLiteHelper
 												.selectRoomByAreaID(areaId));
-
+										sceneList.clear();
+										sceneList.addAll(sqLiteHelper
+												.selectSceneByAreaID(areaId));
+										initMode();
 										room_list_adapter
 												.notifyDataSetChanged();
 										room_list_adapter
@@ -159,7 +170,9 @@ public class MainActivity extends ActivityGroup {
 										toggle_Btn.setVisibility(View.VISIBLE);
 										off_Btn.setVisibility(View.VISIBLE);
 									}
-								}).setNegativeButton("取消", null).show();
+								})
+						.setNegativeButton(R.string.setting_cancel, null)
+						.show();
 			}
 		});
 
@@ -306,18 +319,22 @@ public class MainActivity extends ActivityGroup {
 
 	public void getAreaData() {
 		for (int i = 0; i <= 255; i++) {
-			area[i] = "区域" + i;
+			area[i] = getResources().getString(R.string.area) + i;
 		}
 	}
 
-	int position = 0;
-
 	public void initMode() {
 		mode_hLinearLayout.removeAllViews();
+		sceneStrList.clear();
+		for (int i = 0; i < sceneList.size(); i++) {
+			Scene scene = sceneList.get(i);
+			sceneStrList.add(scene.getName());
+		}
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < sceneStrList.size(); i++) {
 			final TextView textView = new TextView(MainActivity.this);
-			textView.setText("模式" + i);
+			final int idx = i;
+			textView.setText(sceneStrList.get(i));
 			textView.setWidth(100);
 			textView.setGravity(Gravity.CENTER);
 			mode_hLinearLayout.addView(textView);
@@ -326,13 +343,50 @@ public class MainActivity extends ActivityGroup {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					Toast.makeText(MainActivity.this,
-							"点击的是" + textView.getText().toString(),
-							Toast.LENGTH_SHORT).show();
-					setModeColor(position);
+					setModeColor(idx);
+					exe_Mode(sceneList.get(idx).getId());
 				}
 			});
 		}
+	}
+
+	private void exe_Mode(int sceneId) {
+		if (WriteUtil.outputStream == null) {
+			Toast.makeText(MainActivity.this, R.string.connect_msg,
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				List<Scene_Device> devices = new ArrayList<Scene_Device>();
+				devices.clear();
+				for (int i = 0; i < room_data.size(); i++) {
+					devices.addAll(sqLiteHelper
+							.selectScene_DeviceByRoomID(room_data.get(i)
+									.getId()));
+					for (int j = 0; j < devices.size(); j++) {
+						if (devices.get(i).getState() == 1) {
+							WriteUtil.write(MainActivity.this, areaId_one,
+									areaId, roomId, channelId,
+									Light_Cmd.light_open.getVal());
+						} else {
+							WriteUtil.write(MainActivity.this, areaId_one,
+									areaId, roomId, channelId,
+									Light_Cmd.light_close.getVal());
+						}
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}).start();
 	}
 
 	public void setModeColor(int position) {
@@ -349,8 +403,8 @@ public class MainActivity extends ActivityGroup {
 
 	public void connection() {
 		if (ip == null || port == 0) {
-			Toast.makeText(MainActivity.this, "请设置IP地址和端口", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(MainActivity.this, R.string.setting_ip_port_msg,
+					Toast.LENGTH_SHORT).show();
 			return;
 		}
 		socket_Thread = new Thread(new Runnable() {
@@ -361,6 +415,7 @@ public class MainActivity extends ActivityGroup {
 				try {
 					socket = new Socket(ip, port);
 					WriteUtil.outputStream = socket.getOutputStream();
+					WriteUtil.inputStream = socket.getInputStream();
 					handler.sendEmptyMessage(2);
 				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
@@ -376,9 +431,9 @@ public class MainActivity extends ActivityGroup {
 
 	protected void dialog() {
 		AlertDialog.Builder builder = new Builder(MainActivity.this);
-		builder.setMessage("确定要退出吗?");
-		builder.setTitle("提示");
-		builder.setPositiveButton("确认",
+		builder.setMessage(R.string.exit_msg);
+		builder.setTitle(R.string.dialog_msg);
+		builder.setPositiveButton(R.string.submit,
 				new android.content.DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -386,7 +441,7 @@ public class MainActivity extends ActivityGroup {
 						finish();
 					}
 				});
-		builder.setNegativeButton("取消",
+		builder.setNegativeButton(R.string.setting_cancel,
 				new android.content.DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {

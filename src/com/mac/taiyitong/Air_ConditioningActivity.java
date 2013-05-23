@@ -29,7 +29,7 @@ public class Air_ConditioningActivity extends Activity {
 	ToggleButton toggle_Btn;
 
 	int areaId_two = -1;
-	int areaId_one = 0x03;
+	int areaId_one = 0x30;
 	int roomId = -1;
 	int channelId = -1;
 

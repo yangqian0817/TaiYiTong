@@ -11,22 +11,20 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mac.taiyitong.R;
-import com.mac.taiyitong.entity.Room;
+import com.mac.taiyitong.entity.Scene;
 
-public class RoomListAdapter extends BaseAdapter {
+public class SceneListAdapter extends BaseAdapter {
 
 	private Context context;
-	private List<Room> list;
-	int type;
+	private List<Scene> list;
 
-	public RoomListAdapter(Context context, List<Room> list, int type) {
+	public SceneListAdapter(Context context, List<Scene> list) {
 		super();
 		this.context = context;
 		this.list = list;
-		this.type = type;
 	}
 
-	public RoomListAdapter() {
+	public SceneListAdapter() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -52,35 +50,28 @@ public class RoomListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		ViewHolder holder;
+		ViewHolder holder = null;
 		if (convertView == null) {
 			LayoutInflater localinflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			holder = new ViewHolder();
 			convertView = localinflater.inflate(R.layout.simple_listview_item,
 					null);
-			// TextView textView = (TextView) convertView
-			// .findViewById(R.id.textView1);
-			// textView.setText(list.get(position).getName());
-
+			holder = new ViewHolder();
 			holder.textView = (TextView) convertView
 					.findViewById(R.id.textView1);
+
 			convertView.setTag(holder);
+
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 			resetViewHolder(holder);
 		}
-
+		holder.textView.setText(list.get(position).getName());
 		if (position == selectItem) {
-			if (type == 1) {
-				convertView.setBackgroundColor(R.color.setting_choose_bg);
-			} else if (type == 0) {
-				convertView.setBackgroundResource(R.drawable.list_check_bg);
-			}
+			convertView.setBackgroundColor(R.color.setting_choose_bg);
 		} else {
 			convertView.setBackgroundColor(Color.TRANSPARENT);
 		}
-		holder.textView.setText(list.get(position).getName());
 		return convertView;
 	}
 
