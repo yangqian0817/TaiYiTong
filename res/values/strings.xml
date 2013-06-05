@@ -10,7 +10,7 @@
     <string name="setting_area">请选择区域</string>
     <string name="setting_room">房间</string>
     <string name="setting_room_id">房间号码</string>
-    <string name="setting_channel">通道号码</string>
+    <string name="setting_channel">设备编码</string>
     <string name="setting_device">设备名称</string>
     <string name="setting_state">设备状态</string>
     <string name="setting_type">类型</string>
@@ -81,6 +81,7 @@
     <string name="input_port_msg">请输入端口号</string>
     <string name="setting_ip_port_msg">请设置IP地址和端口</string>
     <string name="connect_msg">请先进行连接再操作</string>
+    <string name="connecting">正在进行连接...</string>
     <string name="exit_msg">确定要退出吗?</string>
     <string name="dialog_msg">提示</string>
     <string name="add">添加</string>
@@ -89,15 +90,25 @@
     <string name="verifying_fail">验证失败</string>
     <string name="password_verifying">密码验证</string>
     <string name="password_error">密码错误</string>
-    
+    <string name="password">密码</string>
+    <string name="enter_new_pwd_msg">请输入新密码</string>
+    <string name="change_pwd_ok_msg">修改成功</string>
 
     <string-array name="setting_data">
         <item>房间/设备设置</item>
         <item>远程控制设置</item>
         <item>场景设置</item>
         <item>密码设置</item>
+        <item>换肤</item>
     </string-array>
-<!--         <item>国际化</item> -->
+    <string-array name="skins">
+        <item>蓝色</item>
+        <item>棕色</item>
+        <item>紫色</item>
+        <item>灰色</item>
+    </string-array>
+
+    <!-- <item>国际化</item> -->
     <string-array name="device_type">
         <item>可调光灯</item>
         <item>不可调光灯</item>

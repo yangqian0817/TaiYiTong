@@ -1,8 +1,8 @@
 package com.mac.taiyitong.util;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
 import android.app.AlertDialog;
@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,22 +19,36 @@ import com.mac.taiyitong.R;
 
 public class WriteUtil {
 	public static byte[] tyt_b = new byte[] { 0x54, 0x59, 0x54 };
-	public static OutputStream outputStream = null;
-	public static InputStream inputStream = null;
-	static ByteBuffer buffer = ByteBuffer.allocate(8);
+	public static Socket socket = null;
 	public static boolean isCheck = false;
+	public static boolean b = false;
+	public static boolean isConnecting = false;
+	public static boolean isChecking = false;
+	public static String ip;
+	public static int port;
 
 	public static void write(Context context, int areaId_one, int areaId_two,
 			int roomId, int channelId, byte cmd) {
-		if (!isCheck) {
-			showPwdDialog(context);
+		if (isConnecting) {
+			Toast.makeText(context, R.string.connecting, Toast.LENGTH_SHORT)
+					.show();
+			return;
 		}
-		if (outputStream == null) {
+		if (socket == null) {
 			Toast.makeText(context, R.string.setting_ip_port_msg,
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
-		buffer.clear();
+		if (isChecking) {
+			Toast.makeText(context, R.string.verifying, Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
+		if (!isCheck) {
+			showPwdDialog(context, 0);
+		}
+
+		ByteBuffer buffer = ByteBuffer.allocate(8);
 		buffer.put(tyt_b);
 		byte areaId_one_b = (byte) areaId_one;
 		byte areaId_two_b = (byte) areaId_two;
@@ -54,16 +69,18 @@ public class WriteUtil {
 		buffer.put(channelId_b);
 		buffer.put(cmd);
 		try {
-			outputStream.write(buffer.array());
+			Log.i("提示" + buffer.position(), new String(buffer.array()));
+			socket.getOutputStream().write(buffer.array());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			// android.os.Process.killProcess(android.os.Process.myPid());
+			connection(context);
 		}
 	}
 
-	public static void showPwdDialog(final Context context) {
-		Toast.makeText(context, R.string.verifying, Toast.LENGTH_LONG).show();
+	public static boolean showPwdDialog(final Context context, final int type) {
+		b = false;
 		final EditText password_Et = new EditText(context);
 		new AlertDialog.Builder(context)
 				.setTitle(R.string.password_verifying)
@@ -79,22 +96,28 @@ public class WriteUtil {
 								String c_pwd = password_Et.getText().toString()
 										.trim();
 								if (c_pwd == null || "".equals(c_pwd)
-										|| c_pwd.getBytes().length != 8) {
+										|| c_pwd.getBytes().length != 6) {
 									Toast.makeText(context,
 											R.string.password_error,
 											Toast.LENGTH_LONG).show();
-									showPwdDialog(context);
 									return;
 								}
-								checkPassword(context, c_pwd.getBytes());
+								byte[] pwd_b = new byte[c_pwd.length()];
+								for (int i = 0; i < c_pwd.length(); i++) {
+									String ss = c_pwd.substring(i, i + 1);
+									pwd_b[i] = Byte.parseByte(ss);
+								}
+								b = checkPassword(context, pwd_b, type);
+								isChecking = true;
 							}
 						}).setNegativeButton(R.string.setting_cancel, null)
 				.show();
+		return b;
 	}
 
-	public static void checkPassword(final Context context,
-			final byte[] password) {
-		boolean b = false;
+	public static boolean checkPassword(final Context context,
+			final byte[] password, final int type) {
+		b = false;
 		final Handler handler = new Handler() {
 
 			@Override
@@ -105,54 +128,123 @@ public class WriteUtil {
 					Toast.makeText(context, R.string.verifying_success,
 							Toast.LENGTH_SHORT).show();
 					isCheck = true;
+					b = true;
+					isChecking = false;
 					context.sendBroadcast(new Intent("0"));
 				} else if (msg.what == 1) {
 					Toast.makeText(context, R.string.verifying_fail,
 							Toast.LENGTH_SHORT).show();
 					context.sendBroadcast(new Intent("1"));
-					showPwdDialog(context);
+					showPwdDialog(context, type);
 				} else if (msg.what == 2) {
 					Toast.makeText(context, R.string.io_exception,
 							Toast.LENGTH_SHORT).show();
-					context.sendBroadcast(new Intent("1"));
-					showPwdDialog(context);
+					context.sendBroadcast(new Intent("2"));
+					connection(context);
 				}
 			}
 		};
 
-		if (inputStream == null) {
+		if (socket == null) {
 			Toast.makeText(context, R.string.setting_ip_port_msg,
 					Toast.LENGTH_SHORT).show();
-			return;
-		}
+		} else {
 
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					try {
+
+						byte[] s_password = new byte[8];
+						s_password[0] = 0x2a;
+						s_password[7] = 0x2a;
+						if (type == 1) {
+							s_password[7] = 0x23;
+						}
+						System.arraycopy(password, 0, s_password, 1,
+								password.length);
+						socket.getOutputStream().write(s_password);
+						byte[] r_b = new byte[1];
+						socket.getInputStream().read(r_b);
+						Log.i("提示", new String(r_b));
+						if (r_b[0] == 0x00) {
+							handler.sendEmptyMessage(1);
+						} else if (r_b[0] == 0x01) {
+							b = true;
+							handler.sendEmptyMessage(0);
+						} else {
+							handler.sendEmptyMessage(1);
+						}
+
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						handler.sendEmptyMessage(2);
+						// android.os.Process.killProcess(android.os.Process.myPid());
+					}
+
+				}
+			}).start();
+		}
+		return b;
+	}
+
+	public static void connection(final Context context) {
+		final Handler handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				// TODO Auto-generated method stub
+				super.handleMessage(msg);
+				if (msg.what == 3) {
+					Toast.makeText(context, R.string.ip_port_error,
+							Toast.LENGTH_SHORT).show();
+				} else if (msg.what == 4) {
+					Toast.makeText(context, R.string.io_exception,
+							Toast.LENGTH_SHORT).show();
+					connection(context);
+				} else if (msg.what == 2) {
+					Toast.makeText(context, R.string.setting_ip_port_msg,
+							Toast.LENGTH_SHORT).show();
+				} else if (msg.what == 0) {
+					Toast.makeText(context, R.string.connection_ok,
+							Toast.LENGTH_SHORT).show();
+					WriteUtil.isConnecting = false;
+					WriteUtil.showPwdDialog(context, 0);
+				} else if (msg.what == 1) {
+					Toast.makeText(context, R.string.connecting,
+							Toast.LENGTH_SHORT).show();
+				}
+
+			}
+		};
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
 				try {
-
-					byte[] s_password = new byte[10];
-					s_password[0] = 0x1a;
-					s_password[9] = 0x1a;
-					System.arraycopy(password, 0, s_password, 0,
-							password.length);
-					outputStream.write(s_password);
-					byte[] r_b = new byte[1];
-					inputStream.read(r_b);
-					if (r_b[0] == 0x00) {
-						handler.sendEmptyMessage(0);
-						isCheck = true;
-					} else if (r_b[0] == 0x01) {
+					if (WriteUtil.isConnecting) {
 						handler.sendEmptyMessage(1);
+						return;
+					}
+					WriteUtil.isConnecting = true;
+					if (ip == null || port == 0) {
+						handler.sendEmptyMessage(2);
+						return;
 					}
 
+					handler.sendEmptyMessage(1);
+					WriteUtil.socket = new Socket(ip, port);
+
+					handler.sendEmptyMessage(0);
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					handler.sendEmptyMessage(3);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
-					handler.sendEmptyMessage(2);
-					// android.os.Process.killProcess(android.os.Process.myPid());
+					handler.sendEmptyMessage(4);
 				}
 
 			}

@@ -1,8 +1,6 @@
 package com.mac.taiyitong;
 
 import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -61,14 +57,16 @@ public class MainActivity extends ActivityGroup {
 	MainDeviceListAdapter device_list_adapter;
 	SQLiteHelper sqLiteHelper;
 	private LinearLayout container = null;
+	private LinearLayout top_LL = null;
+	private LinearLayout left_LL = null;
+	private LinearLayout right_LL = null;
+
 	HorizontalScrollView mode_hScrollView;
 	LinearLayout mode_hLinearLayout;
-	Thread socket_Thread;
 	SharedPreferences preferences;
-	String ip = "";
-	int port = 0;
-	public static Socket socket;
-	Handler handler;
+	SharedPreferences sharedPreferences;
+	SharedPreferences.Editor editor;
+
 	List<String> sceneStrList;
 	List<Scene> sceneList;
 
@@ -84,51 +82,45 @@ public class MainActivity extends ActivityGroup {
 		room_list = (ListView) findViewById(R.id.room_list);
 		device_list = (ListView) findViewById(R.id.device_list);
 		container = (LinearLayout) findViewById(R.id.containerBody);
+		left_LL = (LinearLayout) findViewById(R.id.left_LL);
+		top_LL = (LinearLayout) findViewById(R.id.top_LL);
+		right_LL = (LinearLayout) findViewById(R.id.right_LL);
 		mode_hLinearLayout = (LinearLayout) findViewById(R.id.mode_hLinearLayout);
 		mode_hScrollView = (HorizontalScrollView) findViewById(R.id.mode_hScrollView);
 		// mode_hScrollView.add
 		sqLiteHelper = new SQLiteHelper(this, "tyt.db", null, 1);
 		preferences = getSharedPreferences("ip_port", MODE_PRIVATE);
-		ip = preferences.getString("ip", null);
-		port = preferences.getInt("port", 0);
+
+		if (WriteUtil.ip == null || WriteUtil.port == 0) {
+			Toast.makeText(MainActivity.this, R.string.setting_ip_port_msg,
+					Toast.LENGTH_SHORT).show();
+		} else {
+			WriteUtil.ip = preferences.getString("ip", null);
+			WriteUtil.port = preferences.getInt("port", 0);
+			WriteUtil.connection(MainActivity.this);
+		}
+		sharedPreferences = getSharedPreferences("default_area", MODE_PRIVATE);
+		editor = sharedPreferences.edit();
+		areaId = sharedPreferences.getInt("area_ID", 0);
+
 		sceneStrList = new ArrayList<String>();
 		sceneList = new ArrayList<Scene>();
 		room_data = new ArrayList<Room>();
 		device_data = new ArrayList<Device>();
 		getAreaData();
-		initMode();
-
 		room_list_adapter = new RoomListAdapter(MainActivity.this, room_data, 0);
 		device_list_adapter = new MainDeviceListAdapter(MainActivity.this,
 				device_data);
 		room_list.setAdapter(room_list_adapter);
 		device_list.setAdapter(device_list_adapter);
-		handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
-				super.handleMessage(msg);
-				if (msg.what == 0) {
-					Toast.makeText(MainActivity.this, R.string.ip_port_error,
-							Toast.LENGTH_SHORT).show();
-				} else if (msg.what == 1) {
-					Toast.makeText(MainActivity.this, R.string.io_exception,
-							Toast.LENGTH_SHORT).show();
-				} else if (msg.what == 2) {
-					Toast.makeText(MainActivity.this, R.string.connection_ok,
-							Toast.LENGTH_SHORT).show();
-					WriteUtil.showPwdDialog(MainActivity.this);
-				}
-			}
-		};
-		connection();
+
 		choose_area_Btn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				new AlertDialog.Builder(MainActivity.this)
-						.setSingleChoiceItems(area, areaId,
+						.setSingleChoiceItems(area, areaId - 1,
 								new DialogInterface.OnClickListener() {
 
 									@Override
@@ -169,6 +161,8 @@ public class MainActivity extends ActivityGroup {
 												.notifyDataSetInvalidated();
 										toggle_Btn.setVisibility(View.VISIBLE);
 										off_Btn.setVisibility(View.VISIBLE);
+										editor.putInt("area_ID", areaId);
+										editor.commit();
 									}
 								})
 						.setNegativeButton(R.string.setting_cancel, null)
@@ -285,7 +279,8 @@ public class MainActivity extends ActivityGroup {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent();
 				intent.setClass(MainActivity.this, SettingActivity.class);
-				startActivity(intent);
+				// startActivity(intent);
+				startActivityForResult(intent, 0);
 			}
 		});
 
@@ -295,7 +290,7 @@ public class MainActivity extends ActivityGroup {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				WriteUtil.write(MainActivity.this, areaId_one, areaId, roomId,
-						channelId, Light_Cmd.all_close.getVal());
+						channelId, (byte) 0x0f);
 			}
 		});
 		toggle_Btn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -315,6 +310,8 @@ public class MainActivity extends ActivityGroup {
 				}
 			}
 		});
+
+		init_Data();
 	}
 
 	public void getAreaData() {
@@ -351,7 +348,7 @@ public class MainActivity extends ActivityGroup {
 	}
 
 	private void exe_Mode(int sceneId) {
-		if (WriteUtil.outputStream == null) {
+		if (WriteUtil.socket == null) {
 			Toast.makeText(MainActivity.this, R.string.connect_msg,
 					Toast.LENGTH_SHORT).show();
 			return;
@@ -377,6 +374,7 @@ public class MainActivity extends ActivityGroup {
 									areaId, roomId, channelId,
 									Light_Cmd.light_close.getVal());
 						}
+
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
@@ -399,34 +397,6 @@ public class MainActivity extends ActivityGroup {
 				textView.setBackgroundColor(android.R.color.transparent);
 			}
 		}
-	}
-
-	public void connection() {
-		if (ip == null || port == 0) {
-			Toast.makeText(MainActivity.this, R.string.setting_ip_port_msg,
-					Toast.LENGTH_SHORT).show();
-			return;
-		}
-		socket_Thread = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				try {
-					socket = new Socket(ip, port);
-					WriteUtil.outputStream = socket.getOutputStream();
-					WriteUtil.inputStream = socket.getInputStream();
-					handler.sendEmptyMessage(2);
-				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
-					handler.sendEmptyMessage(0);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					handler.sendEmptyMessage(1);
-				}
-			}
-		});
-		socket_Thread.start();
 	}
 
 	protected void dialog() {
@@ -455,13 +425,79 @@ public class MainActivity extends ActivityGroup {
 	@Override
 	public void finish() {
 		// TODO Auto-generated method stub
-		if (socket != null)
+		if (WriteUtil.socket != null)
 			try {
-				socket.close();
+				WriteUtil.socket.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 		super.finish();
 	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == 0) {
+			if (resultCode == RESULT_OK) {
+				int color = data.getExtras().getInt("color");
+				switch (color) {
+
+				case 1:// 蓝色
+					container.setBackgroundResource(R.drawable.middle_bg_blue);
+					left_LL.setBackgroundResource(R.drawable.left_bg_blue);
+					top_LL.setBackgroundResource(R.drawable.top_bg_blue);
+					right_LL.setBackgroundResource(R.drawable.right_bg_blue);
+					break;
+				case 2:// 棕色
+					container.setBackgroundResource(R.drawable.middle_bg_brown);
+					left_LL.setBackgroundResource(R.drawable.left_bg_brown);
+					top_LL.setBackgroundResource(R.drawable.top_bg_brown);
+					right_LL.setBackgroundResource(R.drawable.right_bg_brown);
+					break;
+				case 3:// 紫色
+					container
+							.setBackgroundResource(R.drawable.middle_bg_purple);
+					left_LL.setBackgroundResource(R.drawable.left_bg_purple);
+					top_LL.setBackgroundResource(R.drawable.top_bg_purple);
+					right_LL.setBackgroundResource(R.drawable.right_bg_purple);
+					break;
+				case 4:// 灰色
+					container.setBackgroundResource(R.drawable.middle_bg_gray);
+					left_LL.setBackgroundResource(R.drawable.left_bg_gray);
+					top_LL.setBackgroundResource(R.drawable.top_bg_gray);
+					right_LL.setBackgroundResource(R.drawable.right_bg_gray);
+					break;
+				default:
+					break;
+				}
+
+			}
+		}
+	}
+
+	void init_Data() {
+		container.removeAllViews();
+		room_data.clear();
+		device_data.clear();
+		if (areaId == 0xff) {
+			areaId_one = 0x01;
+		}
+
+		room_data.addAll(sqLiteHelper.selectRoomByAreaID(areaId));
+		sceneList.clear();
+		sceneList.addAll(sqLiteHelper.selectSceneByAreaID(areaId));
+		initMode();
+		room_list_adapter.notifyDataSetChanged();
+		room_list_adapter.notifyDataSetInvalidated();
+		room_list_adapter.setSelectItem(roomId);
+		device_list_adapter.notifyDataSetChanged();
+		device_list_adapter.setSelectItem(deviceId);
+		device_list_adapter.notifyDataSetInvalidated();
+		toggle_Btn.setVisibility(View.VISIBLE);
+		off_Btn.setVisibility(View.VISIBLE);
+	}
+
 }

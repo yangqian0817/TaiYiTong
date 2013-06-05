@@ -41,7 +41,7 @@ public class LockActivity extends Activity {
 							Toast.LENGTH_SHORT).show();
 				} else {
 					WriteUtil.checkPassword(LockActivity.this,
-							confirm_pwd.getBytes());
+							confirm_pwd.getBytes(), 0);
 				}
 				return false;
 			}

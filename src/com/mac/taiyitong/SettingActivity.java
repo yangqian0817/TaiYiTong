@@ -1,19 +1,16 @@
 package com.mac.taiyitong;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -62,9 +59,10 @@ public class SettingActivity extends Activity {
 	DeviceListAdapter setting_device_list_adapter;
 	SharedPreferences sharedPreferences;
 	SharedPreferences.Editor editor;
-	Handler handler;
+	// Handler handler;
 	String n_ip = null;
 	int n_port = -1;
+	int color = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,24 +86,32 @@ public class SettingActivity extends Activity {
 
 		getAreaData();
 
-		handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
-				super.handleMessage(msg);
-				if (msg.what == 0) {
-					Toast.makeText(SettingActivity.this,
-							R.string.ip_port_error, Toast.LENGTH_SHORT).show();
-				} else if (msg.what == 1) {
-					Toast.makeText(SettingActivity.this, R.string.io_exception,
-							Toast.LENGTH_SHORT).show();
-				} else if (msg.what == 2) {
-					Toast.makeText(SettingActivity.this,
-							R.string.connection_ok, Toast.LENGTH_SHORT).show();
-					WriteUtil.showPwdDialog(SettingActivity.this);
-				}
-			}
-		};
+		// handler = new Handler() {
+		// @Override
+		// public void handleMessage(Message msg) {
+		// // TODO Auto-generated method stub
+		// super.handleMessage(msg);
+		// if (msg.what == 3) {
+		// Toast.makeText(SettingActivity.this,
+		// R.string.ip_port_error, Toast.LENGTH_SHORT).show();
+		// } else if (msg.what == 4) {
+		// Toast.makeText(SettingActivity.this, R.string.io_exception,
+		// Toast.LENGTH_SHORT).show();
+		// } else if (msg.what == 2) {
+		// Toast.makeText(SettingActivity.this,
+		// R.string.setting_ip_port_msg, Toast.LENGTH_SHORT)
+		// .show();
+		// } else if (msg.what == 0) {
+		// Toast.makeText(SettingActivity.this,
+		// R.string.connection_ok, Toast.LENGTH_SHORT).show();
+		// WriteUtil.showPwdDialog(SettingActivity.this, 0);
+		// WriteUtil.isConnecting = false;
+		// } else if (msg.what == 1) {
+		// Toast.makeText(SettingActivity.this, R.string.connecting,
+		// Toast.LENGTH_SHORT).show();
+		// }
+		// }
+		// };
 
 		setting_romantic_list_adapter = new android.widget.ArrayAdapter<String>(
 				this, R.layout.simple_listview_item, getResources()
@@ -168,7 +174,9 @@ public class SettingActivity extends Activity {
 									editor.putInt("port", n_port);
 									editor.commit();
 									dialog.dismiss();
-									connection(n_ip, n_port);
+									WriteUtil.ip = n_ip;
+									WriteUtil.port = n_port;
+									WriteUtil.connection(SettingActivity.this);
 								}
 							});
 					reset_Btn
@@ -186,38 +194,55 @@ public class SettingActivity extends Activity {
 							SceneSettingActivity.class);
 					startActivity(intent);
 				} else if (arg2 == 3) {
-					Intent intent = new Intent();
-					intent.setClass(SettingActivity.this, LockActivity.class);
-					startActivity(intent);
+					// Intent intent = new Intent();
+					// intent.setClass(SettingActivity.this,
+					// LockActivity.class);
+					// startActivity(intent);
+					change_pwd_step = 0;
+					if (change_pwd_step == 0) {
+						if (WriteUtil.showPwdDialog(SettingActivity.this, 0)) {
+							change_pwd_step++;
+							Toast.makeText(SettingActivity.this,
+									R.string.verifying_success,
+									Toast.LENGTH_SHORT).show();
+							if (change_pwd_step == 1) {
+								if (WriteUtil.showPwdDialog(
+										SettingActivity.this, 1)) {
+									change_pwd_step++;
+									Toast.makeText(SettingActivity.this,
+											R.string.enter_new_pwd_msg,
+											Toast.LENGTH_SHORT).show();
+									if (change_pwd_step == 2) {
+										if (WriteUtil.showPwdDialog(
+												SettingActivity.this, 1)) {
+											change_pwd_step++;
+											if (change_pwd_step == 3)
+												Toast.makeText(
+														SettingActivity.this,
+														R.string.change_pwd_ok_msg,
+														Toast.LENGTH_SHORT)
+														.show();
+										}
+									}
+								}
+							}
+						}
+					}
+				} else if (arg2 == 4) {
+					new AlertDialog.Builder(SettingActivity.this)
+							.setSingleChoiceItems(R.array.skins, 0,
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											// TODO Auto-generated method stub
+											color = which + 1;
+											finish();
+										}
+									}).show();
 				}
-				// else if (arg2 == 4) {
-				// new AlertDialog.Builder(SettingActivity.this)
-				// .setSingleChoiceItems(R.array.language, 0,
-				// new DialogInterface.OnClickListener() {
-				//
-				// @Override
-				// public void onClick(
-				// DialogInterface dialog,
-				// int which) {
-				// // TODO Auto-generated method stub
-				// Resources resources = getResources();// 获得res资源对象
-				// Configuration config = resources
-				// .getConfiguration();// 获得设置对象
-				// DisplayMetrics dm = resources
-				// .getDisplayMetrics();// 获得屏幕参数：主要是分辨率，像素等。
-				// if (which == 0) {
-				// config.locale = Locale.SIMPLIFIED_CHINESE; // 简体中文
-				// } else {
-				// config.locale = Locale.ENGLISH;
-				// }
-				// resources.updateConfiguration(
-				// config, dm);
-				// dialog.dismiss();
-				// }
-				// })
-				// .setNegativeButton(R.string.setting_cancel, null)
-				// .show();
-				// }
 			}
 		});
 
@@ -558,44 +583,48 @@ public class SettingActivity extends Activity {
 		}
 	}
 
-	public void connection(final String ip, final int port) {
-		if (MainActivity.socket != null) {
-			if (MainActivity.socket.isConnected()) {
-				try {
-					MainActivity.socket.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				try {
-
-					MainActivity.socket = new Socket(ip, port);
-					WriteUtil.outputStream = MainActivity.socket
-							.getOutputStream();
-					WriteUtil.inputStream = MainActivity.socket
-							.getInputStream();
-					handler.sendEmptyMessage(2);
-				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
-					handler.sendEmptyMessage(0);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					handler.sendEmptyMessage(1);
-				}
-			}
-		}).start();
-	}
-
 	@Override
 	public void finish() {
 		// TODO Auto-generated method stub
+		Intent i = new Intent();
+		i.putExtra("color", color);
+		// 返回intent
+		setResult(Activity.RESULT_OK, i);
 		super.finish();
 	}
+
+	int change_pwd_step = 0;
+	// boolean b = false;
+
+	// public boolean showPwdDialog() {
+	// b = false;
+	// final EditText password_Et = new EditText(SettingActivity.this);
+	// new AlertDialog.Builder(SettingActivity.this)
+	// .setTitle(R.string.password)
+	// .setIcon(android.R.drawable.ic_dialog_info)
+	// .setView(password_Et)
+	// .setPositiveButton(R.string.submit,
+	// new DialogInterface.OnClickListener() {
+	//
+	// @Override
+	// public void onClick(DialogInterface dialog,
+	// int which) {
+	// // TODO Auto-generated method stub
+	// String c_pwd = password_Et.getText().toString()
+	// .trim();
+	// if (c_pwd == null || "".equals(c_pwd)
+	// || c_pwd.getBytes().length != 6) {
+	// Toast.makeText(SettingActivity.this,
+	// R.string.password_error,
+	// Toast.LENGTH_LONG).show();
+	// return;
+	// }
+	// b = WriteUtil.checkPassword(
+	// SettingActivity.this, c_pwd.getBytes(),
+	// 1);
+	// }
+	// }).setNegativeButton(R.string.setting_cancel, null)
+	// .show();
+	// return b;
+	// }
 }

@@ -5,9 +5,10 @@
     android:orientation="vertical" >
 
     <LinearLayout
+        android:id="@+id/top_LL"
         android:layout_width="fill_parent"
         android:layout_height="80dp"
-        android:background="@drawable/top_bg"
+        android:background="@drawable/top_bg_blue"
         android:gravity="center" >
 
         <ScrollView
@@ -147,14 +148,14 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="fill_parent" >
 
         <LinearLayout
             android:id="@+id/left_LL"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="2"
-            android:background="@drawable/left_bg"
+            android:background="@drawable/left_bg_blue"
             android:gravity="center"
             android:orientation="vertical" >
 
@@ -172,6 +173,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="30dp"
                 android:layout_margin="5dp"
+                android:visibility="gone"
                 android:background="@drawable/main_shape_bg_btn"
                 android:text="@string/off" />
 
@@ -188,7 +190,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:background="@drawable/middle_bg"
+            android:background="@drawable/middle_bg_blue"
             android:gravity="center" >
         </LinearLayout>
 
@@ -197,7 +199,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="2"
-            android:background="@drawable/middle_bg"
+            android:background="@drawable/middle_bg_blue"
             android:gravity="center"
             android:orientation="vertical" >
 
@@ -216,6 +218,7 @@
                 android:layout_height="30dp"
                 android:layout_margin="5dp"
                 android:background="@drawable/main_shape_bg_btn"
+                android:visibility="gone"
                 android:text="ToggleButton" />
 
             <ListView

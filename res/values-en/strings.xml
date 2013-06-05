@@ -10,7 +10,7 @@
     <string name="setting_area">Choose a region</string>
     <string name="setting_room">Room</string>
     <string name="setting_room_id">Room ID</string>
-    <string name="setting_channel">Channel ID</string>
+    <string name="setting_channel">Device ID</string>
     <string name="setting_device">Device name</string>
     <string name="setting_state">Device status</string>
     <string name="setting_type">Type</string>
@@ -81,6 +81,7 @@
     <string name="input_port_msg">Please enter a port number</string>
     <string name="setting_ip_port_msg">Please set the IP address and port</string>
     <string name="connect_msg">Please connect to operation</string>
+    <string name="connecting">connecting...</string>
     <string name="exit_msg">Sure you want to exit?</string>
     <string name="dialog_msg">Message</string>
     <string name="add">Add</string>
@@ -89,14 +90,24 @@
     <string name="verifying_fail">Verification failed</string>
     <string name="password_verifying">Password authentication</string>
     <string name="password_error">The password is not correct</string>
+    <string name="password">password</string>
+    <string name="enter_new_pwd_msg">Please enter a new password</string>
+    <string name="change_pwd_ok_msg">Successful modification</string>
 
     <string-array name="setting_data">
         <item>Room/Device</item>
         <item>Remote Config</item>
         <item>Mood Settomg</item>
         <item>Password Setting</item>
+        <item>Change Skins</item>
     </string-array>
-<!--         <item>Language</item> -->
+    <string-array name="skins">
+        <item>Blue</item>
+        <item>Brown</item>
+        <item>Purple</item>
+        <item>Gray</item>
+    </string-array>
+    <!-- <item>Language</item> -->
     <string-array name="device_type">
         <item>Dimmable Lights</item>
         <item>Non-dimmable Lights</item>
