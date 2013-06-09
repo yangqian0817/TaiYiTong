@@ -1,6 +1,8 @@
 package com.mac.taiyitong;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,6 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
+import com.mac.taiyitong.broadcas.HomePressBroadcastReceiver;
 import com.mac.taiyitong.cons.Curtain_Cmd;
 import com.mac.taiyitong.util.WriteUtil;
 
@@ -20,6 +23,7 @@ public class CurtainActivity extends Activity {
 	int channelId = -1;
 	ToggleButton switch_Btn;
 	Button pause_Btn;
+	HomePressBroadcastReceiver homePressBroadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,5 +69,17 @@ public class CurtainActivity extends Activity {
 			}
 		});
 
+		homePressBroadcastReceiver = new HomePressBroadcastReceiver();
+		registerReceiver(homePressBroadcastReceiver, new IntentFilter(
+				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 	}
+
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		super.finish();
+
+		unregisterReceiver(homePressBroadcastReceiver);
+	}
+
 }

@@ -213,14 +213,23 @@
                     android:id="@+id/back_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:background="@drawable/save_btn_bg"
                     android:text="@string/tv_back" />
+
+                <Button
+                    android:id="@+id/modify_room_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/delete_btn_bg"
+                    android:text="@string/setting_room_modify" />
 
                 <Button
                     android:id="@+id/device_delete_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="60dp"
+                    android:layout_weight="1"
                     android:background="@drawable/delete_btn_bg"
                     android:text="@string/setting_delete" />
             </LinearLayout>

@@ -1,6 +1,8 @@
 package com.mac.taiyitong;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,6 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
+import com.mac.taiyitong.broadcas.HomePressBroadcastReceiver;
 import com.mac.taiyitong.cons.Heating_Cmd;
 import com.mac.taiyitong.util.WriteUtil;
 
@@ -20,6 +23,7 @@ public class HeatingActivity extends Activity {
 	Button add_Btn;
 	Button sub_Btn;
 	ToggleButton heating_witch;
+	HomePressBroadcastReceiver homePressBroadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,5 +72,18 @@ public class HeatingActivity extends Activity {
 						roomId, channelId, Heating_Cmd.t_sub.getVal());
 			}
 		});
+
+		homePressBroadcastReceiver = new HomePressBroadcastReceiver();
+		registerReceiver(homePressBroadcastReceiver, new IntentFilter(
+				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+	}
+
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		super.finish();
+
+		unregisterReceiver(homePressBroadcastReceiver);
 	}
 }

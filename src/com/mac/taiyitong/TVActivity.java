@@ -3,6 +3,8 @@ package com.mac.taiyitong;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
+import com.mac.taiyitong.broadcas.HomePressBroadcastReceiver;
 import com.mac.taiyitong.cons.Light_Cmd;
 import com.mac.taiyitong.cons.TV_Cmd;
 import com.mac.taiyitong.util.WriteUtil;
@@ -36,6 +39,7 @@ public class TVActivity extends Activity {
 	int roomId = -1;
 	int channelId = -1;
 	Dialog dialog;
+	HomePressBroadcastReceiver homePressBroadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -306,5 +310,17 @@ public class TVActivity extends Activity {
 			}
 		});
 
+		homePressBroadcastReceiver = new HomePressBroadcastReceiver();
+		registerReceiver(homePressBroadcastReceiver, new IntentFilter(
+				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+	}
+
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		super.finish();
+
+		unregisterReceiver(homePressBroadcastReceiver);
 	}
 }

@@ -1,15 +1,17 @@
 package com.mac.taiyitong;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
+import com.mac.taiyitong.broadcas.HomePressBroadcastReceiver;
 import com.mac.taiyitong.cons.AC_Cmd;
+import com.mac.taiyitong.cons.Light_Cmd;
 import com.mac.taiyitong.util.WriteUtil;
 
 public class Air_ConditioningActivity extends Activity {
@@ -24,14 +26,15 @@ public class Air_ConditioningActivity extends Activity {
 	Button minute_Btn;
 	Button clear_Btn;
 	Button wind_direction_Btn;
-	Button lock_Btn;
+	Button close_Btn;
 	Button light_Btn;
-	ToggleButton toggle_Btn;
+	Button open_Btn;
 
 	int areaId_two = -1;
 	int areaId_one = 0x30;
 	int roomId = -1;
 	int channelId = -1;
+	HomePressBroadcastReceiver homePressBroadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +51,9 @@ public class Air_ConditioningActivity extends Activity {
 		minute_Btn = (Button) findViewById(R.id.minute_btn);
 		clear_Btn = (Button) findViewById(R.id.clear_btn);
 		wind_direction_Btn = (Button) findViewById(R.id.wind_direction_btn);
-		lock_Btn = (Button) findViewById(R.id.lock_btn);
+		close_Btn = (Button) findViewById(R.id.close_btn);
 		light_Btn = (Button) findViewById(R.id.light_btn);
-		toggle_Btn = (ToggleButton) findViewById(R.id.toggle_btn);
+		open_Btn = (ToggleButton) findViewById(R.id.open_btn);
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
 			roomId = bundle.getInt("roomId");
@@ -167,26 +170,40 @@ public class Air_ConditioningActivity extends Activity {
 			}
 		});
 
-		lock_Btn.setOnClickListener(new OnClickListener() {
+		close_Btn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				WriteUtil.write(Air_ConditioningActivity.this, areaId_one,
-						areaId_two, roomId, channelId, AC_Cmd.lock.getVal());
+						areaId_two, roomId, channelId,
+						Light_Cmd.all_light_close.getVal());
 			}
 		});
 
-		toggle_Btn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		open_Btn.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
+			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				WriteUtil.write(Air_ConditioningActivity.this, areaId_one,
-						areaId_two, roomId, channelId, AC_Cmd.witch.getVal());
+						areaId_two, roomId, channelId,
+						Light_Cmd.light_open.getVal());
 			}
 		});
+
+		homePressBroadcastReceiver = new HomePressBroadcastReceiver();
+		registerReceiver(homePressBroadcastReceiver, new IntentFilter(
+				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+	}
+
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		super.finish();
+
+		unregisterReceiver(homePressBroadcastReceiver);
 	}
 
 }

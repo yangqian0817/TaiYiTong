@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,6 +24,7 @@ import com.mac.taiyitong.adapter.ArrayAdapter;
 import com.mac.taiyitong.adapter.RoomListAdapter;
 import com.mac.taiyitong.adapter.SceneDeviceListAdapter;
 import com.mac.taiyitong.adapter.SceneListAdapter;
+import com.mac.taiyitong.broadcas.HomePressBroadcastReceiver;
 import com.mac.taiyitong.entity.Room;
 import com.mac.taiyitong.entity.Scene;
 import com.mac.taiyitong.entity.Scene_Device;
@@ -52,6 +55,7 @@ public class SceneSettingActivity extends Activity {
 	ArrayAdapter setting_area_list_adapter;
 	RoomListAdapter setting_room_list_adapter;
 	SceneDeviceListAdapter setting_scene_device_list_adapter;
+	HomePressBroadcastReceiver homePressBroadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -324,6 +328,10 @@ public class SceneSettingActivity extends Activity {
 				finish();
 			}
 		});
+		homePressBroadcastReceiver = new HomePressBroadcastReceiver();
+		registerReceiver(homePressBroadcastReceiver, new IntentFilter(
+				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
 	}
 
 	public void getAreaData() {
@@ -340,6 +348,9 @@ public class SceneSettingActivity extends Activity {
 	@Override
 	public void finish() {
 		// TODO Auto-generated method stub
+
+		unregisterReceiver(homePressBroadcastReceiver);
 		super.finish();
 	}
+
 }

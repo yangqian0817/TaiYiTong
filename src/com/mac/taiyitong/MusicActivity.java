@@ -1,6 +1,8 @@
 package com.mac.taiyitong;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,6 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ToggleButton;
 
+import com.mac.taiyitong.broadcas.HomePressBroadcastReceiver;
 import com.mac.taiyitong.cons.Music_Cmd;
 import com.mac.taiyitong.cons.TV_Cmd;
 import com.mac.taiyitong.util.WriteUtil;
@@ -27,6 +30,7 @@ public class MusicActivity extends Activity {
 	int areaId_one = 0x30;
 	int roomId = -1;
 	int channelId = -1;
+	HomePressBroadcastReceiver homePressBroadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +151,17 @@ public class MusicActivity extends Activity {
 						roomId, channelId, Music_Cmd.witch.getVal());
 			}
 		});
+		homePressBroadcastReceiver = new HomePressBroadcastReceiver();
+		registerReceiver(homePressBroadcastReceiver, new IntentFilter(
+				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+	}
+
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		super.finish();
+
+		unregisterReceiver(homePressBroadcastReceiver);
 	}
 
 }

@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mac.taiyitong.R;
+import com.mac.taiyitong.cons.State_Cmd;
 
 public class WriteUtil {
 	public static byte[] tyt_b = new byte[] { 0x54, 0x59, 0x54 };
@@ -100,6 +102,7 @@ public class WriteUtil {
 									Toast.makeText(context,
 											R.string.password_error,
 											Toast.LENGTH_LONG).show();
+									TipHelper.Vibrate((Activity) context, 1000);
 									return;
 								}
 								byte[] pwd_b = new byte[c_pwd.length()];
@@ -136,6 +139,7 @@ public class WriteUtil {
 							Toast.LENGTH_SHORT).show();
 					context.sendBroadcast(new Intent("1"));
 					showPwdDialog(context, type);
+					TipHelper.Vibrate((Activity) context, 1000);
 				} else if (msg.what == 2) {
 					Toast.makeText(context, R.string.io_exception,
 							Toast.LENGTH_SHORT).show();
@@ -249,5 +253,65 @@ public class WriteUtil {
 
 			}
 		}).start();
+	}
+
+	public static void getState(final Context context, final int areaId_one,
+			final int areaId_two, final int roomId, final int channelId) {
+		final Handler handler = new Handler() {
+
+			@Override
+			public void handleMessage(Message msg) {
+				// TODO Auto-generated method stub
+				super.handleMessage(msg);
+				if (msg.what == 0) {
+					Toast.makeText(context, R.string.state_on,
+							Toast.LENGTH_SHORT).show();
+				} else if (msg.what == 1) {
+					Toast.makeText(context, R.string.state_off,
+							Toast.LENGTH_SHORT).show();
+				} else if (msg.what == 2) {
+					Toast.makeText(context, R.string.io_exception,
+							Toast.LENGTH_SHORT).show();
+					context.sendBroadcast(new Intent("2"));
+					connection(context);
+				}
+			}
+		};
+
+		if (socket == null) {
+			Toast.makeText(context, R.string.setting_ip_port_msg,
+					Toast.LENGTH_SHORT).show();
+		} else {
+
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					try {
+
+						write(context, areaId_one, areaId_two, roomId,
+								channelId, State_Cmd.state_request.getVal());
+						byte[] r_b = new byte[1];
+						socket.getInputStream().read(r_b);
+						Log.i("ÌבÊ¾", new String(r_b));
+						if (r_b[0] == State_Cmd.state_open.getVal()) {
+							handler.sendEmptyMessage(0);
+						} else if (r_b[0] == State_Cmd.state_close.getVal()) {
+							handler.sendEmptyMessage(1);
+						} else {
+							handler.sendEmptyMessage(1);
+						}
+
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						handler.sendEmptyMessage(2);
+						// android.os.Process.killProcess(android.os.Process.myPid());
+					}
+
+				}
+			}).start();
+		}
 	}
 }

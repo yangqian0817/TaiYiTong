@@ -5,12 +5,13 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnKeyListener;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mac.taiyitong.broadcas.PwdConfirmBroadcastReceiver;
+import com.mac.taiyitong.util.TipHelper;
 import com.mac.taiyitong.util.WriteUtil;
 
 public class LockActivity extends Activity {
@@ -30,22 +31,37 @@ public class LockActivity extends Activity {
 		filter.addAction("0");
 		filter.addAction("1");
 		registerReceiver(broadcastReceiver, filter);
-		password_Et.setOnKeyListener(new OnKeyListener() {
+
+		unlock_Btn.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
+			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				String confirm_pwd = password_Et.getText().toString().trim();
-				if (confirm_pwd.getBytes().length == 8) {
+				if (confirm_pwd.getBytes().length != 6) {
 					Toast.makeText(LockActivity.this, "√‹¬Î¥ÌŒÛ",
 							Toast.LENGTH_SHORT).show();
+					TipHelper.Vibrate(LockActivity.this, 1000);
 				} else {
-					WriteUtil.checkPassword(LockActivity.this,
-							confirm_pwd.getBytes(), 0);
+					if (!WriteUtil.checkPassword(LockActivity.this,
+							confirm_pwd.getBytes(), 0)) {
+						TipHelper.Vibrate(LockActivity.this, 1000);
+					} else {
+						finish();
+					}
 				}
-				return false;
 			}
 		});
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 }

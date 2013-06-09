@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -29,6 +30,7 @@ import android.widget.ToggleButton;
 
 import com.mac.taiyitong.adapter.MainDeviceListAdapter;
 import com.mac.taiyitong.adapter.RoomListAdapter;
+import com.mac.taiyitong.broadcas.HomePressBroadcastReceiver;
 import com.mac.taiyitong.cons.Light_Cmd;
 import com.mac.taiyitong.entity.Device;
 import com.mac.taiyitong.entity.Room;
@@ -66,9 +68,11 @@ public class MainActivity extends ActivityGroup {
 	SharedPreferences preferences;
 	SharedPreferences sharedPreferences;
 	SharedPreferences.Editor editor;
-
+	HomePressBroadcastReceiver homePressBroadcastReceiver;
 	List<String> sceneStrList;
 	List<Scene> sceneList;
+
+	ImageView query_Iv;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +82,6 @@ public class MainActivity extends ActivityGroup {
 		choose_area_Btn = (Button) findViewById(R.id.choose_area_btn);
 		toggle_Btn = (ToggleButton) findViewById(R.id.toggle_btn);
 		off_Btn = (Button) findViewById(R.id.off_btn);
-
 		room_list = (ListView) findViewById(R.id.room_list);
 		device_list = (ListView) findViewById(R.id.device_list);
 		container = (LinearLayout) findViewById(R.id.containerBody);
@@ -87,27 +90,29 @@ public class MainActivity extends ActivityGroup {
 		right_LL = (LinearLayout) findViewById(R.id.right_LL);
 		mode_hLinearLayout = (LinearLayout) findViewById(R.id.mode_hLinearLayout);
 		mode_hScrollView = (HorizontalScrollView) findViewById(R.id.mode_hScrollView);
-		// mode_hScrollView.add
+		query_Iv = (ImageView) findViewById(R.id.query_iv);
+		homePressBroadcastReceiver = new HomePressBroadcastReceiver();
+		registerReceiver(homePressBroadcastReceiver, new IntentFilter(
+				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
 		sqLiteHelper = new SQLiteHelper(this, "tyt.db", null, 1);
 		preferences = getSharedPreferences("ip_port", MODE_PRIVATE);
-
+		WriteUtil.ip = preferences.getString("ip", null);
+		WriteUtil.port = preferences.getInt("port", 0);
 		if (WriteUtil.ip == null || WriteUtil.port == 0) {
 			Toast.makeText(MainActivity.this, R.string.setting_ip_port_msg,
 					Toast.LENGTH_SHORT).show();
 		} else {
-			WriteUtil.ip = preferences.getString("ip", null);
-			WriteUtil.port = preferences.getInt("port", 0);
 			WriteUtil.connection(MainActivity.this);
 		}
 		sharedPreferences = getSharedPreferences("default_area", MODE_PRIVATE);
 		editor = sharedPreferences.edit();
-		areaId = sharedPreferences.getInt("area_ID", 0);
 
 		sceneStrList = new ArrayList<String>();
 		sceneList = new ArrayList<Scene>();
 		room_data = new ArrayList<Room>();
 		device_data = new ArrayList<Device>();
-		getAreaData();
+
 		room_list_adapter = new RoomListAdapter(MainActivity.this, room_data, 0);
 		device_list_adapter = new MainDeviceListAdapter(MainActivity.this,
 				device_data);
@@ -176,9 +181,6 @@ public class MainActivity extends ActivityGroup {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-				if (arg2 == roomId) {
-					return;
-				}
 				container.removeAllViews();
 				room_list_adapter.setSelectItem(arg2);
 				room_list_adapter.notifyDataSetInvalidated();
@@ -310,6 +312,28 @@ public class MainActivity extends ActivityGroup {
 				}
 			}
 		});
+		query_Iv.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (areaId == -1) {
+					Toast.makeText(MainActivity.this, R.string.choose_area_msg,
+							Toast.LENGTH_LONG).show();
+				}
+				if (roomId == -1) {
+					Toast.makeText(MainActivity.this, R.string.choose_area_msg,
+							Toast.LENGTH_LONG).show();
+				}
+				if (deviceId == -1) {
+					Toast.makeText(MainActivity.this,
+							R.string.choose_device_msg, Toast.LENGTH_LONG)
+							.show();
+				}
+				WriteUtil.getState(MainActivity.this, areaId_one, areaId,
+						roomId, channelId);
+			}
+		});
 
 		init_Data();
 	}
@@ -385,6 +409,7 @@ public class MainActivity extends ActivityGroup {
 				}
 			}
 		}).start();
+
 	}
 
 	public void setModeColor(int position) {
@@ -432,7 +457,7 @@ public class MainActivity extends ActivityGroup {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+		unregisterReceiver(homePressBroadcastReceiver);
 		super.finish();
 	}
 
@@ -479,6 +504,8 @@ public class MainActivity extends ActivityGroup {
 	}
 
 	void init_Data() {
+		areaId = sharedPreferences.getInt("area_ID", 0);
+		getAreaData();
 		container.removeAllViews();
 		room_data.clear();
 		device_data.clear();
@@ -498,6 +525,13 @@ public class MainActivity extends ActivityGroup {
 		device_list_adapter.notifyDataSetInvalidated();
 		toggle_Btn.setVisibility(View.VISIBLE);
 		off_Btn.setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		init_Data();
+		super.onResume();
 	}
 
 }

@@ -249,6 +249,25 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		return b;
 	}
 
+	public boolean modifyRoom(ContentValues contentValues) {
+		db = getWritableDatabase();
+		boolean b = false;
+		try {
+			db.beginTransaction();
+			db.update("room", contentValues, "id=?",
+					new String[] { contentValues.getAsInteger("id") + "" });
+			db.setTransactionSuccessful();
+			b = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			db.endTransaction();
+			db.close();
+		}
+		return b;
+	}
+
 	public List<Scene> selectSceneByAreaID(int id) {
 		db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery("SELECT * FROM scene WHERE areaid=" + id,

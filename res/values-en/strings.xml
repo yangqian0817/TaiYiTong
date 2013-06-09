@@ -18,6 +18,7 @@
     <string name="setting_cancel">Cancel</string>
     <string name="setting_delete">Delete</string>
     <string name="setting_scene_modify">Edit MoodName</string>
+    <string name="setting_room_modify">Edit</string>
     <string name="device_name">Device name</string>
     <string name="device_type">Device Type</string>
     <string name="main_choose_area">Area</string>
@@ -77,6 +78,9 @@
     <string name="choose_delete_item_msg">Select the item that you want to delete</string>
     <string name="choose_add_item_area_msg">Select the project you want to add the area</string>
     <string name="choose_add_item_room_msg">Select the project you want to add room</string>
+    <string name="choose_area_msg">Please select the query region</string>
+    <string name="choose_room_msg">Select the search room</string>
+    <string name="choose_device_msg">Select query appliance</string>
     <string name="input_ip_msg">Enter the IP address</string>
     <string name="input_port_msg">Please enter a port number</string>
     <string name="setting_ip_port_msg">Please set the IP address and port</string>
@@ -93,6 +97,8 @@
     <string name="password">password</string>
     <string name="enter_new_pwd_msg">Please enter a new password</string>
     <string name="change_pwd_ok_msg">Successful modification</string>
+    <string name="state_on">On</string>
+    <string name="state_off">Off</string>
 
     <string-array name="setting_data">
         <item>Room/Device</item>

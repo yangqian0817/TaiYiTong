@@ -1,6 +1,8 @@
 package com.mac.taiyitong;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -9,6 +11,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.ToggleButton;
 
+import com.mac.taiyitong.broadcas.HomePressBroadcastReceiver;
 import com.mac.taiyitong.cons.Light_Cmd;
 import com.mac.taiyitong.util.ByteStrParser;
 import com.mac.taiyitong.util.WriteUtil;
@@ -20,6 +23,7 @@ public class LightActivity extends Activity {
 	int roomId = -1;
 	int channelId = -1;
 	ToggleButton light_switch;
+	HomePressBroadcastReceiver homePressBroadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,5 +85,17 @@ public class LightActivity extends Activity {
 			}
 		});
 
+		homePressBroadcastReceiver = new HomePressBroadcastReceiver();
+		registerReceiver(homePressBroadcastReceiver, new IntentFilter(
+				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+	}
+
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		super.finish();
+
+		unregisterReceiver(homePressBroadcastReceiver);
 	}
 }

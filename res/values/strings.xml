@@ -18,6 +18,7 @@
     <string name="setting_cancel">取消</string>
     <string name="setting_delete">删除</string>
     <string name="setting_scene_modify">修改场景名称</string>
+    <string name="setting_room_modify">修改</string>
     <string name="device_name">设备名称</string>
     <string name="device_type">设备类型</string>
     <string name="main_choose_area">选择区域</string>
@@ -77,6 +78,9 @@
     <string name="choose_delete_item_msg">请选中要删除的项目</string>
     <string name="choose_add_item_area_msg">请选中要添加的项目的区域</string>
     <string name="choose_add_item_room_msg">请选中要添加的项目的房间</string>
+    <string name="choose_area_msg">请选中查询的区域</string>
+    <string name="choose_room_msg">请选中查询的房间</string>
+    <string name="choose_device_msg">请选中查询的家电</string>
     <string name="input_ip_msg">请输入IP地址</string>
     <string name="input_port_msg">请输入端口号</string>
     <string name="setting_ip_port_msg">请设置IP地址和端口</string>
@@ -93,6 +97,8 @@
     <string name="password">密码</string>
     <string name="enter_new_pwd_msg">请输入新密码</string>
     <string name="change_pwd_ok_msg">修改成功</string>
+    <string name="state_on">打开</string>
+    <string name="state_off">关闭</string>
 
     <string-array name="setting_data">
         <item>房间/设备设置</item>

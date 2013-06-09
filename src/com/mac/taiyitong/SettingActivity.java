@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.mac.taiyitong.adapter.ArrayAdapter;
 import com.mac.taiyitong.adapter.DeviceListAdapter;
 import com.mac.taiyitong.adapter.RoomListAdapter;
+import com.mac.taiyitong.broadcas.HomePressBroadcastReceiver;
 import com.mac.taiyitong.entity.Device;
 import com.mac.taiyitong.entity.Room;
 import com.mac.taiyitong.util.SQLiteHelper;
@@ -36,6 +38,7 @@ public class SettingActivity extends Activity {
 	Button room_delete_Btn;
 	Button back_Btn;
 	Button device_delete_Btn;
+	Button room_modify_Btn;
 	SQLiteHelper sqLiteHelper;
 	public int roomId = -1;
 	public int areaId = -1;
@@ -63,6 +66,7 @@ public class SettingActivity extends Activity {
 	String n_ip = null;
 	int n_port = -1;
 	int color = -1;
+	HomePressBroadcastReceiver homePressBroadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -561,6 +565,78 @@ public class SettingActivity extends Activity {
 				}
 			}
 		});
+		room_modify_Btn = (Button) findViewById(R.id.modify_room_btn);
+
+		room_modify_Btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (roomId == -1) {
+					Toast.makeText(SettingActivity.this, "请选中要修改的场景",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+				final Room room = room_data.get(roomId);
+
+				final EditText scene_Name = new EditText(SettingActivity.this);
+				scene_Name.setText(room.getName());
+				new AlertDialog.Builder(SettingActivity.this)
+						.setTitle("修改房间")
+						.setIcon(android.R.drawable.ic_dialog_info)
+						.setView(scene_Name)
+						.setPositiveButton("确定",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// TODO Auto-generated method stub
+										if (scene_Name.getText().toString()
+												.trim() == null
+												|| "".equals(scene_Name
+														.getText().toString()
+														.trim())) {
+											Toast.makeText(
+													SettingActivity.this,
+													"房间名称不能为空",
+													Toast.LENGTH_LONG).show();
+											return;
+										}
+
+										ContentValues contentValues = new ContentValues();
+										contentValues.put("id", room.getId());
+										contentValues.put("name", scene_Name
+												.getText().toString().trim());
+										contentValues.put("areaid",
+												room.getAreaid());
+										contentValues.put("roomnum",
+												room.getRoomnum());
+										if (sqLiteHelper
+												.modifyRoom(contentValues)) {
+											room.setName(scene_Name.getText()
+													.toString().trim());
+											room_data.set(roomId, room);
+
+											setting_room_list_adapter
+													.notifyDataSetChanged();
+											Toast.makeText(
+													SettingActivity.this,
+													"修改成功", Toast.LENGTH_LONG)
+													.show();
+
+										} else {
+											Toast.makeText(
+													SettingActivity.this,
+													"修改失败", Toast.LENGTH_LONG)
+													.show();
+										}
+
+									}
+								}).setNegativeButton("取消", null).show();
+
+			}
+		});
 
 		back_Btn.setOnClickListener(new OnClickListener() {
 
@@ -570,6 +646,11 @@ public class SettingActivity extends Activity {
 				finish();
 			}
 		});
+
+		homePressBroadcastReceiver = new HomePressBroadcastReceiver();
+		registerReceiver(homePressBroadcastReceiver, new IntentFilter(
+				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
 	}
 
 	public void getAreaData() {
@@ -590,6 +671,8 @@ public class SettingActivity extends Activity {
 		i.putExtra("color", color);
 		// 返回intent
 		setResult(Activity.RESULT_OK, i);
+
+		unregisterReceiver(homePressBroadcastReceiver);
 		super.finish();
 	}
 
