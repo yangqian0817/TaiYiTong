@@ -12,12 +12,12 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1" >
+            android:layout_weight="3" >
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:orientation="vertical" >
 
                 <TextView
@@ -46,7 +46,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:gravity="center"
                 android:orientation="vertical" >
 
@@ -100,16 +100,34 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:orientation="vertical" >
 
-                <TextView
-                    android:id="@+id/setting_room_tv"
+                <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="30dp"
                     android:background="@color/setting_top_bg"
-                    android:gravity="center"
-                    android:text="@string/setting_room"
-                    android:textColor="@color/setting_text_color" />
+                    android:gravity="center" >
+
+                    <TextView
+                        android:id="@+id/setting_room_id_tv"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/setting_room_id"
+                        android:textColor="@color/setting_text_color" />
+
+                    <TextView
+                        android:id="@+id/setting_room_tv"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:background="@color/setting_top_bg"
+                        android:gravity="center"
+                        android:text="@string/setting_room"
+                        android:textColor="@color/setting_text_color" />
+                </LinearLayout>
 
                 <ListView
                     android:id="@+id/setting_room_list"
@@ -129,7 +147,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -177,10 +195,10 @@
                         android:id="@+id/setting_scene_device_list"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:dividerHeight="5dp"
-                        android:divider="#00000000"
                         android:layout_weight="1"
-                        android:background="@color/setting_list_bg" >
+                        android:background="@color/setting_list_bg"
+                        android:divider="#00000000"
+                        android:dividerHeight="5dp" >
                     </ListView>
                 </LinearLayout>
             </LinearLayout>
@@ -200,18 +218,20 @@
                     android:id="@+id/back_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:background="@drawable/save_btn_bg"
                     android:text="@string/tv_back" />
 
                 <Button
                     android:id="@+id/modify_scene_btn"
-                    android:layout_width="120dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
+                    android:layout_weight="1"
                     android:background="@drawable/delete_btn_bg"
-                    android:text="@string/setting_scene_modify" />
+                    android:text="@string/setting_room_modify" />
             </LinearLayout>
-            
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+</LinearLayout>

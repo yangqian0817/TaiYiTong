@@ -12,9 +12,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -29,7 +31,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.mac.taiyitong.adapter.MainDeviceListAdapter;
-import com.mac.taiyitong.adapter.RoomListAdapter;
+import com.mac.taiyitong.adapter.RoomNameListAdapter;
 import com.mac.taiyitong.broadcas.HomePressBroadcastReceiver;
 import com.mac.taiyitong.cons.Light_Cmd;
 import com.mac.taiyitong.entity.Device;
@@ -55,7 +57,7 @@ public class MainActivity extends ActivityGroup {
 	ListView device_list;
 	List<Room> room_data;
 	List<Device> device_data;
-	RoomListAdapter room_list_adapter;
+	RoomNameListAdapter room_list_adapter;
 	MainDeviceListAdapter device_list_adapter;
 	SQLiteHelper sqLiteHelper;
 	private LinearLayout container = null;
@@ -77,7 +79,10 @@ public class MainActivity extends ActivityGroup {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		Log.i("提示", "main-Oncreate");
 		setting_Iv = (ImageView) findViewById(R.id.setting_iv);
 		choose_area_Btn = (Button) findViewById(R.id.choose_area_btn);
 		toggle_Btn = (ToggleButton) findViewById(R.id.toggle_btn);
@@ -92,8 +97,10 @@ public class MainActivity extends ActivityGroup {
 		mode_hScrollView = (HorizontalScrollView) findViewById(R.id.mode_hScrollView);
 		query_Iv = (ImageView) findViewById(R.id.query_iv);
 		homePressBroadcastReceiver = new HomePressBroadcastReceiver();
-		registerReceiver(homePressBroadcastReceiver, new IntentFilter(
-				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+		// filter.addAction(Intent.ACTION_SCREEN_OFF);
+		registerReceiver(homePressBroadcastReceiver, filter);
 
 		sqLiteHelper = new SQLiteHelper(this, "tyt.db", null, 1);
 		preferences = getSharedPreferences("ip_port", MODE_PRIVATE);
@@ -103,7 +110,8 @@ public class MainActivity extends ActivityGroup {
 			Toast.makeText(MainActivity.this, R.string.setting_ip_port_msg,
 					Toast.LENGTH_SHORT).show();
 		} else {
-			WriteUtil.connection(MainActivity.this);
+			if (WriteUtil.socket == null)
+				WriteUtil.connection(MainActivity.this);
 		}
 		sharedPreferences = getSharedPreferences("default_area", MODE_PRIVATE);
 		editor = sharedPreferences.edit();
@@ -113,7 +121,8 @@ public class MainActivity extends ActivityGroup {
 		room_data = new ArrayList<Room>();
 		device_data = new ArrayList<Device>();
 
-		room_list_adapter = new RoomListAdapter(MainActivity.this, room_data, 0);
+		room_list_adapter = new RoomNameListAdapter(MainActivity.this,
+				room_data, 0);
 		device_list_adapter = new MainDeviceListAdapter(MainActivity.this,
 				device_data);
 		room_list.setAdapter(room_list_adapter);
@@ -191,6 +200,8 @@ public class MainActivity extends ActivityGroup {
 				device_data.addAll(sqLiteHelper.selectDeviceByRoomID(room_data
 						.get(arg2).getId()));
 				room_list_adapter.notifyDataSetChanged();
+				device_list_adapter.notifyDataSetChanged();
+				device_list_adapter.notifyDataSetInvalidated();
 			}
 		});
 
@@ -208,7 +219,7 @@ public class MainActivity extends ActivityGroup {
 				container.removeAllViews();
 				Intent intent = new Intent();
 				intent.putExtra("areaId", areaId);
-				intent.putExtra("roomId", room_data.get(roomId).getId());
+				intent.putExtra("roomId", room_data.get(roomId).getRoomnum());
 				intent.putExtra("channelId", channelId);
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				switch (device_type) {
@@ -291,8 +302,12 @@ public class MainActivity extends ActivityGroup {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				WriteUtil.write(MainActivity.this, areaId_one, areaId, roomId,
-						channelId, (byte) 0x0f);
+				if (roomId == -1) {
+					return;
+				}
+				WriteUtil.write(MainActivity.this, areaId_one, areaId,
+						room_data.get(roomId).getRoomnum(), channelId,
+						(byte) 0x0f);
 			}
 		});
 		toggle_Btn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -301,13 +316,16 @@ public class MainActivity extends ActivityGroup {
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				// TODO Auto-generated method stub
+				if (roomId == -1) {
+					return;
+				}
 				if (isChecked) {
 					WriteUtil.write(MainActivity.this, areaId_one, areaId,
-							roomId, channelId,
+							room_data.get(roomId).getRoomnum(), 0x00,
 							Light_Cmd.all_light_open.getVal());
 				} else {
 					WriteUtil.write(MainActivity.this, areaId_one, areaId,
-							roomId, channelId,
+							room_data.get(roomId).getRoomnum(), 0x00,
 							Light_Cmd.all_light_close.getVal());
 				}
 			}
@@ -330,8 +348,10 @@ public class MainActivity extends ActivityGroup {
 							R.string.choose_device_msg, Toast.LENGTH_LONG)
 							.show();
 				}
+				if (!WriteUtil.isCheck)
+					return;
 				WriteUtil.getState(MainActivity.this, areaId_one, areaId,
-						roomId, channelId);
+						room_data.get(roomId).getRoomnum(), channelId);
 			}
 		});
 
@@ -365,13 +385,16 @@ public class MainActivity extends ActivityGroup {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					setModeColor(idx);
-					exe_Mode(sceneList.get(idx).getId());
+					if (!WriteUtil.isCheck)
+						return;
+					exe_Mode(sceneList.get(idx).getAreaid(), sceneList.get(idx)
+							.getId());
 				}
 			});
 		}
 	}
 
-	private void exe_Mode(int sceneId) {
+	private void exe_Mode(final int areaId, final int sceneId) {
 		if (WriteUtil.socket == null) {
 			Toast.makeText(MainActivity.this, R.string.connect_msg,
 					Toast.LENGTH_SHORT).show();
@@ -382,20 +405,23 @@ public class MainActivity extends ActivityGroup {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
+				List<Room> r_l = sqLiteHelper.selectRoomByAreaID(areaId);
 				List<Scene_Device> devices = new ArrayList<Scene_Device>();
-				devices.clear();
-				for (int i = 0; i < room_data.size(); i++) {
-					devices.addAll(sqLiteHelper
-							.selectScene_DeviceByRoomID(room_data.get(i)
-									.getId()));
+				for (int i = 0; i < r_l.size(); i++) {
+					int r_i = r_l.get(i).getId();
+					devices.clear();
+					devices.addAll(sqLiteHelper.selectScene_DeviceByRoomID(r_i,
+							sceneId));
 					for (int j = 0; j < devices.size(); j++) {
-						if (devices.get(i).getState() == 1) {
+						if (devices.get(j).getState() == 1) {
 							WriteUtil.write(MainActivity.this, areaId_one,
-									areaId, roomId, channelId,
+									areaId, r_l.get(i).getRoomnum(), devices
+											.get(j).getDevice().getChannelid(),
 									Light_Cmd.light_open.getVal());
 						} else {
 							WriteUtil.write(MainActivity.this, areaId_one,
-									areaId, roomId, channelId,
+									areaId, r_l.get(i).getRoomnum(), devices
+											.get(j).getDevice().getChannelid(),
 									Light_Cmd.light_close.getVal());
 						}
 
@@ -407,6 +433,7 @@ public class MainActivity extends ActivityGroup {
 						}
 					}
 				}
+
 			}
 		}).start();
 
@@ -433,7 +460,14 @@ public class MainActivity extends ActivityGroup {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
-						finish();
+						if (WriteUtil.socket != null)
+							try {
+								WriteUtil.socket.close();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						unregisterReceiver(homePressBroadcastReceiver);
 					}
 				});
 		builder.setNegativeButton(R.string.setting_cancel,
@@ -450,15 +484,15 @@ public class MainActivity extends ActivityGroup {
 	@Override
 	public void finish() {
 		// TODO Auto-generated method stub
-		if (WriteUtil.socket != null)
-			try {
-				WriteUtil.socket.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		unregisterReceiver(homePressBroadcastReceiver);
+		Log.i("提示", "main-finish");
 		super.finish();
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		Log.i("提示", "main-onDestroy");
 	}
 
 	@Override
@@ -498,7 +532,11 @@ public class MainActivity extends ActivityGroup {
 				default:
 					break;
 				}
-
+				// Intent it = new Intent();
+				// it.setClass(MainActivity.this, LockActivity.class);
+				// startActivity(it);
+				// Log.i("提示", "main-startActivity");
+				// WriteUtil.isHome = true;
 			}
 		}
 	}

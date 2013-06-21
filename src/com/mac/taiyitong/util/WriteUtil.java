@@ -28,6 +28,7 @@ public class WriteUtil {
 	public static boolean isChecking = false;
 	public static String ip;
 	public static int port;
+	public static boolean isHome = false;
 
 	public static void write(Context context, int areaId_one, int areaId_two,
 			int roomId, int channelId, byte cmd) {
@@ -48,6 +49,7 @@ public class WriteUtil {
 		}
 		if (!isCheck) {
 			showPwdDialog(context, 0);
+			return;
 		}
 
 		ByteBuffer buffer = ByteBuffer.allocate(8);
@@ -111,10 +113,12 @@ public class WriteUtil {
 									pwd_b[i] = Byte.parseByte(ss);
 								}
 								b = checkPassword(context, pwd_b, type);
-								isChecking = true;
+								if (type == 0)
+									isChecking = true;
 							}
 						}).setNegativeButton(R.string.setting_cancel, null)
 				.show();
+
 		return b;
 	}
 
@@ -128,17 +132,37 @@ public class WriteUtil {
 				// TODO Auto-generated method stub
 				super.handleMessage(msg);
 				if (msg.what == 0) {
-					Toast.makeText(context, R.string.verifying_success,
-							Toast.LENGTH_SHORT).show();
-					isCheck = true;
-					b = true;
-					isChecking = false;
-					context.sendBroadcast(new Intent("0"));
+					if (type == 10) {
+						context.sendBroadcast(new Intent("10_0"));
+					} else if (type == 11) {
+						context.sendBroadcast(new Intent("11_0"));
+					} else if (type == 12) {
+						context.sendBroadcast(new Intent("12_0"));
+					} else {
+						Toast.makeText(context, R.string.verifying_success,
+								Toast.LENGTH_SHORT).show();
+						isCheck = true;
+						b = true;
+						if (type == 0)
+							isChecking = false;
+						context.sendBroadcast(new Intent("0"));
+					}
 				} else if (msg.what == 1) {
 					Toast.makeText(context, R.string.verifying_fail,
 							Toast.LENGTH_SHORT).show();
-					context.sendBroadcast(new Intent("1"));
-					showPwdDialog(context, type);
+					if (type != 2) {
+						if (type == 10) {
+							context.sendBroadcast(new Intent("10_1"));
+						} else if (type == 11) {
+							context.sendBroadcast(new Intent("11_1"));
+						} else if (type == 12) {
+							context.sendBroadcast(new Intent("12_1"));
+						} else {
+							context.sendBroadcast(new Intent("1"));
+							if (!isChecking)
+								showPwdDialog(context, type);
+						}
+					}
 					TipHelper.Vibrate((Activity) context, 1000);
 				} else if (msg.what == 2) {
 					Toast.makeText(context, R.string.io_exception,
@@ -164,7 +188,7 @@ public class WriteUtil {
 						byte[] s_password = new byte[8];
 						s_password[0] = 0x2a;
 						s_password[7] = 0x2a;
-						if (type == 1) {
+						if (type == 10) {
 							s_password[7] = 0x23;
 						}
 						System.arraycopy(password, 0, s_password, 1,
@@ -292,12 +316,12 @@ public class WriteUtil {
 
 						write(context, areaId_one, areaId_two, roomId,
 								channelId, State_Cmd.state_request.getVal());
-						byte[] r_b = new byte[1];
+						byte[] r_b = new byte[8];
 						socket.getInputStream().read(r_b);
 						Log.i("ÌבÊ¾", new String(r_b));
-						if (r_b[0] == State_Cmd.state_open.getVal()) {
+						if (r_b[7] == State_Cmd.state_open.getVal()) {
 							handler.sendEmptyMessage(0);
-						} else if (r_b[0] == State_Cmd.state_close.getVal()) {
+						} else if (r_b[7] == State_Cmd.state_close.getVal()) {
 							handler.sendEmptyMessage(1);
 						} else {
 							handler.sendEmptyMessage(1);
@@ -305,7 +329,6 @@ public class WriteUtil {
 
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
 						handler.sendEmptyMessage(2);
 						// android.os.Process.killProcess(android.os.Process.myPid());
 					}

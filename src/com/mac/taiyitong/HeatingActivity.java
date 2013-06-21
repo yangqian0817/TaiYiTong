@@ -22,6 +22,7 @@ public class HeatingActivity extends Activity {
 	int channelId = -1;
 	Button add_Btn;
 	Button sub_Btn;
+	Button mode_Btn;
 	ToggleButton heating_witch;
 	HomePressBroadcastReceiver homePressBroadcastReceiver;
 
@@ -32,6 +33,7 @@ public class HeatingActivity extends Activity {
 		setContentView(R.layout.control_heating);
 		add_Btn = (Button) findViewById(R.id.add_btn);
 		sub_Btn = (Button) findViewById(R.id.sub_btn);
+		mode_Btn = (Button) findViewById(R.id.mode_btn);
 		heating_witch = (ToggleButton) findViewById(R.id.heating_witch);
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
@@ -70,6 +72,16 @@ public class HeatingActivity extends Activity {
 				// TODO Auto-generated method stub
 				WriteUtil.write(HeatingActivity.this, areaId_one, areaId_two,
 						roomId, channelId, Heating_Cmd.t_sub.getVal());
+			}
+		});
+
+		mode_Btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				WriteUtil.write(HeatingActivity.this, areaId_one, areaId_two,
+						roomId, channelId, Heating_Cmd.mode.getVal());
 			}
 		});
 

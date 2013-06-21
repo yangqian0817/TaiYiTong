@@ -96,6 +96,7 @@
     <string name="password_error">密码错误</string>
     <string name="password">密码</string>
     <string name="enter_new_pwd_msg">请输入新密码</string>
+    <string name="enter_new_pwd_again_msg">请再次输入新密码</string>
     <string name="change_pwd_ok_msg">修改成功</string>
     <string name="state_on">打开</string>
     <string name="state_off">关闭</string>

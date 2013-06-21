@@ -320,24 +320,44 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		return b;
 	}
 
-	public List<Scene_Device> selectScene_DeviceByRoomID(int roomid) {
+	private Scene_Device selectScene_Device(int deviceid, int sceneid) {
 		db = this.getReadableDatabase();
-		Cursor cursor = db
-				.rawQuery(
-						"select d.id,d.name,d.channelid,d.type,d.roomid,s.id,s.state,s.sceneid from device d left outer join scene_device s on d.id=s.deviceid where roomid="
-								+ roomid, null);
+		Cursor cursor = db.rawQuery(
+				"select id,state from scene_device where deviceid=" + deviceid
+						+ " and sceneid=" + sceneid, null);
+		Scene_Device scene_Device = null;
+		while (cursor.moveToNext()) {
+			scene_Device = new Scene_Device();
+			scene_Device.setId(cursor.getInt(0));
+			scene_Device.setState(cursor.getInt(1));
+			scene_Device.setSceneid(sceneid);
+		}
+		cursor.close();
+		db.close();
+		return scene_Device;
+	}
+
+	public List<Scene_Device> selectScene_DeviceByRoomID(int roomid, int sceneid) {
+		db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery("select * from device where roomid="
+				+ roomid, null);
 		List<Scene_Device> list = new ArrayList<Scene_Device>();
 		while (cursor.moveToNext()) {
-			Scene_Device scene_Device = new Scene_Device();
+			Scene_Device scene_Device;
 			Device device = new Device();
 			device.setId(cursor.getInt(0));
 			device.setName(cursor.getString(1));
 			device.setChannelid(cursor.getInt(2));
 			device.setType(cursor.getInt(3));
 			device.setRoomid(cursor.getInt(4));
-			scene_Device.setId(cursor.getInt(5));
-			scene_Device.setState(cursor.getInt(6));
-			scene_Device.setSceneid(cursor.getInt(7));
+
+			scene_Device = selectScene_Device(device.getId(), sceneid);
+			if (scene_Device == null) {
+				scene_Device = new Scene_Device();
+			}
+			// scene_Device.setId(cursor.getInt(5));
+			// scene_Device.setState(cursor.getInt(6));
+			// scene_Device.setSceneid(cursor.getInt(7));
 			scene_Device.setDevice(device);
 			list.add(scene_Device);
 		}

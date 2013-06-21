@@ -97,6 +97,8 @@ public class SceneSettingActivity extends Activity {
 				if (sceneId == arg2) {
 					return;
 				}
+				roomId = -1;
+
 				sceneId = arg2;
 				setting_scene_list_adapter.setSelectItem(arg2);
 				setting_scene_list_adapter.notifyDataSetInvalidated();
@@ -105,7 +107,8 @@ public class SceneSettingActivity extends Activity {
 				setting_room_list_adapter.notifyDataSetChanged();
 				setting_room_list_adapter.notifyDataSetInvalidated();
 				setting_room_list_adapter.setSelectItem(roomId);
-
+				scene_device_data.clear();
+				setting_scene_device_list_adapter.notifyDataSetChanged();
 			}
 		});
 
@@ -115,9 +118,9 @@ public class SceneSettingActivity extends Activity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-				if (areaId == arg2 + 1) {
-					return;
-				}
+				// if (areaId == arg2 + 1) {
+				// return;
+				// }
 				setting_area_list_adapter.setSelectItem(arg2);
 				setting_area_list_adapter.notifyDataSetInvalidated();
 				areaId = arg2 + 1;
@@ -148,16 +151,17 @@ public class SceneSettingActivity extends Activity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-				if (roomId == arg2) {
-					return;
-				}
+				// if (roomId == arg2) {
+				// return;
+				// }
 				setting_room_list_adapter.setSelectItem(arg2);
 				setting_room_list_adapter.notifyDataSetInvalidated();
 				roomId = arg2;
 				scene_device_data.clear();
 				scene_device_data.addAll(sqLiteHelper
-						.selectScene_DeviceByRoomID(room_data.get(arg2).getId()));
-
+						.selectScene_DeviceByRoomID(
+								room_data.get(arg2).getId(),
+								scene_data.get(sceneId).getId()));
 				setting_scene_device_list_adapter.notifyDataSetChanged();
 			}
 		});
@@ -310,7 +314,19 @@ public class SceneSettingActivity extends Activity {
 
 				if (sqLiteHelper.delScene(scene_data.get(sceneId).getId())) {
 					scene_data.remove(sceneId);
+					sceneId = -1;
+					roomId = -1;
+					room_data.clear();
+					// room_data.addAll(sqLiteHelper.selectRoomByAreaID(areaId));
+
+					setting_room_list_adapter.notifyDataSetChanged();
+					setting_room_list_adapter.notifyDataSetInvalidated();
+					setting_room_list_adapter.setSelectItem(roomId);
+					scene_device_data.clear();
+					setting_scene_device_list_adapter.notifyDataSetChanged();
 					setting_scene_list_adapter.notifyDataSetChanged();
+					setting_scene_list_adapter.setSelectItem(sceneId);
+					setting_scene_list_adapter.notifyDataSetInvalidated();
 					Toast.makeText(SceneSettingActivity.this, "É¾³ý³É¹¦",
 							Toast.LENGTH_LONG).show();
 				} else {
@@ -329,8 +345,10 @@ public class SceneSettingActivity extends Activity {
 			}
 		});
 		homePressBroadcastReceiver = new HomePressBroadcastReceiver();
-		registerReceiver(homePressBroadcastReceiver, new IntentFilter(
-				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+		// filter.addAction(Intent.ACTION_SCREEN_OFF);
+		registerReceiver(homePressBroadcastReceiver, filter);
 
 	}
 

@@ -3,6 +3,7 @@ package com.mac.taiyitong;
 import android.app.Activity;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,14 +25,14 @@ public class LockActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lock);
+		Log.i("提示", "lock_onCreate");
 		password_Et = (EditText) findViewById(R.id.password_et);
 		unlock_Btn = (Button) findViewById(R.id.unlock_btn);
-		broadcastReceiver = new PwdConfirmBroadcastReceiver(this);
+		broadcastReceiver = new PwdConfirmBroadcastReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("0");
 		filter.addAction("1");
 		registerReceiver(broadcastReceiver, filter);
-
 		unlock_Btn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -43,12 +44,12 @@ public class LockActivity extends Activity {
 							Toast.LENGTH_SHORT).show();
 					TipHelper.Vibrate(LockActivity.this, 1000);
 				} else {
-					if (!WriteUtil.checkPassword(LockActivity.this,
-							confirm_pwd.getBytes(), 0)) {
-						TipHelper.Vibrate(LockActivity.this, 1000);
-					} else {
-						finish();
+					byte[] pwd_b = new byte[confirm_pwd.length()];
+					for (int i = 0; i < confirm_pwd.length(); i++) {
+						String ss = confirm_pwd.substring(i, i + 1);
+						pwd_b[i] = Byte.parseByte(ss);
 					}
+					WriteUtil.checkPassword(LockActivity.this, pwd_b, 2);
 				}
 			}
 		});
@@ -64,4 +65,12 @@ public class LockActivity extends Activity {
 		return super.onKeyDown(keyCode, event);
 	}
 
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		super.finish();
+		Log.i("提示", "lock_finish");
+		unregisterReceiver(broadcastReceiver);
+		WriteUtil.isHome = false;
+	}
 }

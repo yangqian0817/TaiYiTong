@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ToggleButton;
 
 import com.mac.taiyitong.broadcas.HomePressBroadcastReceiver;
 import com.mac.taiyitong.cons.AC_Cmd;
@@ -53,7 +52,7 @@ public class Air_ConditioningActivity extends Activity {
 		wind_direction_Btn = (Button) findViewById(R.id.wind_direction_btn);
 		close_Btn = (Button) findViewById(R.id.close_btn);
 		light_Btn = (Button) findViewById(R.id.light_btn);
-		open_Btn = (ToggleButton) findViewById(R.id.open_btn);
+		open_Btn = (Button) findViewById(R.id.open_btn);
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
 			roomId = bundle.getInt("roomId");

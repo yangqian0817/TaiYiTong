@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 import com.mac.taiyitong.adapter.ArrayAdapter;
 import com.mac.taiyitong.adapter.DeviceListAdapter;
 import com.mac.taiyitong.adapter.RoomListAdapter;
+import com.mac.taiyitong.broadcas.ChangePwdConfirmBroadcastReceiver;
 import com.mac.taiyitong.broadcas.HomePressBroadcastReceiver;
 import com.mac.taiyitong.entity.Device;
 import com.mac.taiyitong.entity.Room;
@@ -67,12 +69,14 @@ public class SettingActivity extends Activity {
 	int n_port = -1;
 	int color = -1;
 	HomePressBroadcastReceiver homePressBroadcastReceiver;
+	ChangePwdConfirmBroadcastReceiver changePwdConfirmBroadcastReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_setting);
+		Log.i("提示", "setting-Oncreate");
 		room_add_Iv = (ImageView) findViewById(R.id.room_add);
 		device_add_Iv = (ImageView) findViewById(R.id.device_add);
 
@@ -204,33 +208,7 @@ public class SettingActivity extends Activity {
 					// startActivity(intent);
 					change_pwd_step = 0;
 					if (change_pwd_step == 0) {
-						if (WriteUtil.showPwdDialog(SettingActivity.this, 0)) {
-							change_pwd_step++;
-							Toast.makeText(SettingActivity.this,
-									R.string.verifying_success,
-									Toast.LENGTH_SHORT).show();
-							if (change_pwd_step == 1) {
-								if (WriteUtil.showPwdDialog(
-										SettingActivity.this, 1)) {
-									change_pwd_step++;
-									Toast.makeText(SettingActivity.this,
-											R.string.enter_new_pwd_msg,
-											Toast.LENGTH_SHORT).show();
-									if (change_pwd_step == 2) {
-										if (WriteUtil.showPwdDialog(
-												SettingActivity.this, 1)) {
-											change_pwd_step++;
-											if (change_pwd_step == 3)
-												Toast.makeText(
-														SettingActivity.this,
-														R.string.change_pwd_ok_msg,
-														Toast.LENGTH_SHORT)
-														.show();
-										}
-									}
-								}
-							}
-						}
+						showPwdDialog(10);
 					}
 				} else if (arg2 == 4) {
 					new AlertDialog.Builder(SettingActivity.this)
@@ -648,8 +626,17 @@ public class SettingActivity extends Activity {
 		});
 
 		homePressBroadcastReceiver = new HomePressBroadcastReceiver();
-		registerReceiver(homePressBroadcastReceiver, new IntentFilter(
-				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+		// filter.addAction(Intent.ACTION_SCREEN_OFF);
+		registerReceiver(homePressBroadcastReceiver, filter);
+
+		changePwdConfirmBroadcastReceiver = new ChangePwdConfirmBroadcastReceiver();
+		IntentFilter filter1 = new IntentFilter();
+		filter1.addAction("10_0");
+		filter1.addAction("11_0");
+		filter1.addAction("12_0");
+		registerReceiver(changePwdConfirmBroadcastReceiver, filter1);
 
 	}
 
@@ -664,50 +651,22 @@ public class SettingActivity extends Activity {
 		}
 	}
 
+	public void showPwdDialog(int t) {
+		WriteUtil.showPwdDialog(SettingActivity.this, t);
+	}
+
 	@Override
 	public void finish() {
 		// TODO Auto-generated method stub
+		Log.i("提示", "setting-finish");
 		Intent i = new Intent();
 		i.putExtra("color", color);
 		// 返回intent
 		setResult(Activity.RESULT_OK, i);
-
+		unregisterReceiver(changePwdConfirmBroadcastReceiver);
 		unregisterReceiver(homePressBroadcastReceiver);
 		super.finish();
 	}
 
-	int change_pwd_step = 0;
-	// boolean b = false;
-
-	// public boolean showPwdDialog() {
-	// b = false;
-	// final EditText password_Et = new EditText(SettingActivity.this);
-	// new AlertDialog.Builder(SettingActivity.this)
-	// .setTitle(R.string.password)
-	// .setIcon(android.R.drawable.ic_dialog_info)
-	// .setView(password_Et)
-	// .setPositiveButton(R.string.submit,
-	// new DialogInterface.OnClickListener() {
-	//
-	// @Override
-	// public void onClick(DialogInterface dialog,
-	// int which) {
-	// // TODO Auto-generated method stub
-	// String c_pwd = password_Et.getText().toString()
-	// .trim();
-	// if (c_pwd == null || "".equals(c_pwd)
-	// || c_pwd.getBytes().length != 6) {
-	// Toast.makeText(SettingActivity.this,
-	// R.string.password_error,
-	// Toast.LENGTH_LONG).show();
-	// return;
-	// }
-	// b = WriteUtil.checkPassword(
-	// SettingActivity.this, c_pwd.getBytes(),
-	// 1);
-	// }
-	// }).setNegativeButton(R.string.setting_cancel, null)
-	// .show();
-	// return b;
-	// }
+	public int change_pwd_step = 0;
 }

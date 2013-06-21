@@ -96,6 +96,7 @@
     <string name="password_error">The password is not correct</string>
     <string name="password">password</string>
     <string name="enter_new_pwd_msg">Please enter a new password</string>
+      <string name="enter_new_pwd_again_msg">Please enter a new password again</string>
     <string name="change_pwd_ok_msg">Successful modification</string>
     <string name="state_on">On</string>
     <string name="state_off">Off</string>

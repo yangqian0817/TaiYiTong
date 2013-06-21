@@ -25,6 +25,7 @@ public class MusicActivity extends Activity {
 	Button next_Btn;
 	Button last_Btn;
 	Button mode_Btn;
+	Button stop_Btn;
 	ToggleButton toggle_Btn;
 	int areaId_two = -1;
 	int areaId_one = 0x30;
@@ -47,7 +48,7 @@ public class MusicActivity extends Activity {
 		last_Btn = (Button) findViewById(R.id.last_btn);
 		mode_Btn = (Button) findViewById(R.id.mode_btn);
 		toggle_Btn = (ToggleButton) findViewById(R.id.toggle_btn);
-
+		stop_Btn = (Button) findViewById(R.id.stop_btn);
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
 			roomId = bundle.getInt("roomId");
@@ -91,6 +92,16 @@ public class MusicActivity extends Activity {
 				// TODO Auto-generated method stub
 				WriteUtil.write(MusicActivity.this, areaId_one, areaId_two,
 						roomId, channelId, TV_Cmd.v_sub.getVal());
+			}
+		});
+
+		stop_Btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				WriteUtil.write(MusicActivity.this, areaId_one, areaId_two,
+						roomId, channelId, Music_Cmd.stop.getVal());
 			}
 		});
 		submit_Btn.setOnClickListener(new OnClickListener() {

@@ -12,12 +12,12 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1" >
+            android:layout_weight="3" >
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:orientation="vertical" >
 
                 <TextView
@@ -46,7 +46,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:orientation="vertical" >
 
                 <TextView
@@ -86,7 +86,16 @@
                     android:gravity="center" >
 
                     <TextView
-                        android:id="@+id/setting_room_tv"
+                        android:id="@+id/setting_room_id_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/setting_room_id"
+                        android:textColor="@color/setting_text_color" />
+
+                    <TextView
+                        android:id="@+id/setting_room_name_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -110,14 +119,29 @@
                     android:background="@color/setting_list_bg" >
                 </ListView>
 
-                <Button
-                    android:id="@+id/room_delete_btn"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="9dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/delete_btn_bg"
-                    android:text="@string/setting_delete" />
+                    android:gravity="center"
+                    android:padding="10dp" >
+
+                    <Button
+                        android:id="@+id/room_delete_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/delete_btn_bg"
+                        android:text="@string/setting_delete" />
+
+                    <Button
+                        android:id="@+id/modify_room_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/delete_btn_bg"
+                        android:text="@string/setting_room_modify" />
+                </LinearLayout>
             </LinearLayout>
 
             <View
@@ -129,7 +153,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -213,23 +237,14 @@
                     android:id="@+id/back_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:background="@drawable/save_btn_bg"
                     android:text="@string/tv_back" />
-
-                <Button
-                    android:id="@+id/modify_room_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/delete_btn_bg"
-                    android:text="@string/setting_room_modify" />
 
                 <Button
                     android:id="@+id/device_delete_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
                     android:background="@drawable/delete_btn_bg"
                     android:text="@string/setting_delete" />
             </LinearLayout>
